@@ -70,17 +70,92 @@ CMakeFiles/Mes_Proj.dir/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Mes_Proj.dir/main.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ala/Desktop/MES/Mes_Proj/main.cpp -o CMakeFiles/Mes_Proj.dir/main.cpp.s
 
+CMakeFiles/Mes_Proj.dir/GlobalData.cpp.o: CMakeFiles/Mes_Proj.dir/flags.make
+CMakeFiles/Mes_Proj.dir/GlobalData.cpp.o: ../GlobalData.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ala/Desktop/MES/Mes_Proj/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/Mes_Proj.dir/GlobalData.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Mes_Proj.dir/GlobalData.cpp.o -c /home/ala/Desktop/MES/Mes_Proj/GlobalData.cpp
+
+CMakeFiles/Mes_Proj.dir/GlobalData.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Mes_Proj.dir/GlobalData.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ala/Desktop/MES/Mes_Proj/GlobalData.cpp > CMakeFiles/Mes_Proj.dir/GlobalData.cpp.i
+
+CMakeFiles/Mes_Proj.dir/GlobalData.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Mes_Proj.dir/GlobalData.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ala/Desktop/MES/Mes_Proj/GlobalData.cpp -o CMakeFiles/Mes_Proj.dir/GlobalData.cpp.s
+
+CMakeFiles/Mes_Proj.dir/Node.cpp.o: CMakeFiles/Mes_Proj.dir/flags.make
+CMakeFiles/Mes_Proj.dir/Node.cpp.o: ../Node.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ala/Desktop/MES/Mes_Proj/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/Mes_Proj.dir/Node.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Mes_Proj.dir/Node.cpp.o -c /home/ala/Desktop/MES/Mes_Proj/Node.cpp
+
+CMakeFiles/Mes_Proj.dir/Node.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Mes_Proj.dir/Node.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ala/Desktop/MES/Mes_Proj/Node.cpp > CMakeFiles/Mes_Proj.dir/Node.cpp.i
+
+CMakeFiles/Mes_Proj.dir/Node.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Mes_Proj.dir/Node.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ala/Desktop/MES/Mes_Proj/Node.cpp -o CMakeFiles/Mes_Proj.dir/Node.cpp.s
+
+CMakeFiles/Mes_Proj.dir/Grid.cpp.o: CMakeFiles/Mes_Proj.dir/flags.make
+CMakeFiles/Mes_Proj.dir/Grid.cpp.o: ../Grid.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ala/Desktop/MES/Mes_Proj/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/Mes_Proj.dir/Grid.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Mes_Proj.dir/Grid.cpp.o -c /home/ala/Desktop/MES/Mes_Proj/Grid.cpp
+
+CMakeFiles/Mes_Proj.dir/Grid.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Mes_Proj.dir/Grid.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ala/Desktop/MES/Mes_Proj/Grid.cpp > CMakeFiles/Mes_Proj.dir/Grid.cpp.i
+
+CMakeFiles/Mes_Proj.dir/Grid.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Mes_Proj.dir/Grid.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ala/Desktop/MES/Mes_Proj/Grid.cpp -o CMakeFiles/Mes_Proj.dir/Grid.cpp.s
+
+CMakeFiles/Mes_Proj.dir/Element.cpp.o: CMakeFiles/Mes_Proj.dir/flags.make
+CMakeFiles/Mes_Proj.dir/Element.cpp.o: ../Element.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ala/Desktop/MES/Mes_Proj/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/Mes_Proj.dir/Element.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Mes_Proj.dir/Element.cpp.o -c /home/ala/Desktop/MES/Mes_Proj/Element.cpp
+
+CMakeFiles/Mes_Proj.dir/Element.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Mes_Proj.dir/Element.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ala/Desktop/MES/Mes_Proj/Element.cpp > CMakeFiles/Mes_Proj.dir/Element.cpp.i
+
+CMakeFiles/Mes_Proj.dir/Element.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Mes_Proj.dir/Element.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ala/Desktop/MES/Mes_Proj/Element.cpp -o CMakeFiles/Mes_Proj.dir/Element.cpp.s
+
+CMakeFiles/Mes_Proj.dir/UniversalElement.cpp.o: CMakeFiles/Mes_Proj.dir/flags.make
+CMakeFiles/Mes_Proj.dir/UniversalElement.cpp.o: ../UniversalElement.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ala/Desktop/MES/Mes_Proj/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/Mes_Proj.dir/UniversalElement.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Mes_Proj.dir/UniversalElement.cpp.o -c /home/ala/Desktop/MES/Mes_Proj/UniversalElement.cpp
+
+CMakeFiles/Mes_Proj.dir/UniversalElement.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Mes_Proj.dir/UniversalElement.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ala/Desktop/MES/Mes_Proj/UniversalElement.cpp > CMakeFiles/Mes_Proj.dir/UniversalElement.cpp.i
+
+CMakeFiles/Mes_Proj.dir/UniversalElement.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Mes_Proj.dir/UniversalElement.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ala/Desktop/MES/Mes_Proj/UniversalElement.cpp -o CMakeFiles/Mes_Proj.dir/UniversalElement.cpp.s
+
 # Object files for target Mes_Proj
 Mes_Proj_OBJECTS = \
-"CMakeFiles/Mes_Proj.dir/main.cpp.o"
+"CMakeFiles/Mes_Proj.dir/main.cpp.o" \
+"CMakeFiles/Mes_Proj.dir/GlobalData.cpp.o" \
+"CMakeFiles/Mes_Proj.dir/Node.cpp.o" \
+"CMakeFiles/Mes_Proj.dir/Grid.cpp.o" \
+"CMakeFiles/Mes_Proj.dir/Element.cpp.o" \
+"CMakeFiles/Mes_Proj.dir/UniversalElement.cpp.o"
 
 # External object files for target Mes_Proj
 Mes_Proj_EXTERNAL_OBJECTS =
 
 Mes_Proj: CMakeFiles/Mes_Proj.dir/main.cpp.o
+Mes_Proj: CMakeFiles/Mes_Proj.dir/GlobalData.cpp.o
+Mes_Proj: CMakeFiles/Mes_Proj.dir/Node.cpp.o
+Mes_Proj: CMakeFiles/Mes_Proj.dir/Grid.cpp.o
+Mes_Proj: CMakeFiles/Mes_Proj.dir/Element.cpp.o
+Mes_Proj: CMakeFiles/Mes_Proj.dir/UniversalElement.cpp.o
 Mes_Proj: CMakeFiles/Mes_Proj.dir/build.make
 Mes_Proj: CMakeFiles/Mes_Proj.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/ala/Desktop/MES/Mes_Proj/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable Mes_Proj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/ala/Desktop/MES/Mes_Proj/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Linking CXX executable Mes_Proj"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/Mes_Proj.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

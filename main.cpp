@@ -1,6 +1,20 @@
 #include <iostream>
 
+#include "Grid.h"
+#include "UniversalElement.h"
+
 int main() {
-    std::cout << "Hello, World!" << std::endl;
-    return 0;
+
+    Grid grid;
+
+    grid.printGrid();
+
+    UniversalElement uelem;
+
+    uelem.createMatrixHandC(grid.elements[0]);
+    uelem.print();
+
+    grid.aggregationHandC();
+
+
 }

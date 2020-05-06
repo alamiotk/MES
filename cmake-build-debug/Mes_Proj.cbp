@@ -84,6 +84,36 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/home/ala/Desktop/MES/Mes_Proj/Element.cpp">
+			<Option target="Mes_Proj"/>
+		</Unit>
+		<Unit filename="/home/ala/Desktop/MES/Mes_Proj/Element.h">
+			<Option target="Mes_Proj"/>
+		</Unit>
+		<Unit filename="/home/ala/Desktop/MES/Mes_Proj/GlobalData.cpp">
+			<Option target="Mes_Proj"/>
+		</Unit>
+		<Unit filename="/home/ala/Desktop/MES/Mes_Proj/GlobalData.h">
+			<Option target="Mes_Proj"/>
+		</Unit>
+		<Unit filename="/home/ala/Desktop/MES/Mes_Proj/Grid.cpp">
+			<Option target="Mes_Proj"/>
+		</Unit>
+		<Unit filename="/home/ala/Desktop/MES/Mes_Proj/Grid.h">
+			<Option target="Mes_Proj"/>
+		</Unit>
+		<Unit filename="/home/ala/Desktop/MES/Mes_Proj/Node.cpp">
+			<Option target="Mes_Proj"/>
+		</Unit>
+		<Unit filename="/home/ala/Desktop/MES/Mes_Proj/Node.h">
+			<Option target="Mes_Proj"/>
+		</Unit>
+		<Unit filename="/home/ala/Desktop/MES/Mes_Proj/UniversalElement.cpp">
+			<Option target="Mes_Proj"/>
+		</Unit>
+		<Unit filename="/home/ala/Desktop/MES/Mes_Proj/UniversalElement.h">
+			<Option target="Mes_Proj"/>
+		</Unit>
 		<Unit filename="/home/ala/Desktop/MES/Mes_Proj/main.cpp">
 			<Option target="Mes_Proj"/>
 		</Unit>
