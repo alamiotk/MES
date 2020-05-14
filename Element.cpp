@@ -14,11 +14,11 @@ Element::Element(vector<Node *> nodes) {
     this->nodes = nodes;
 }
 
-//string Element::printCoordinates() {
-//    string s;
-//    for (int i =0; i < nodes.size(); i++) {
-//        s += to_string(nodes[i]->id) + " ";
-//    }
-//
-//    return s;
-//}
+string Element::printCoordinates() {
+    string s;
+    for (int i =0; i < nodes.size(); i++) {
+        s += to_string(nodes[i]->id) + " ";
+    }
+
+    return s;
+}

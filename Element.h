@@ -4,6 +4,8 @@
 
 #include <vector>
 #include "Node.h"
+#include <string>
+
 
 #ifndef MES_PROJ_ELEMENT_H
 #define MES_PROJ_ELEMENT_H
@@ -15,7 +17,7 @@ public:
     vector<Node *> nodes;
 
     Element(vector<Node *> nodes);
-//    string printCoordinates();
+    string printCoordinates();
 };
 
 

@@ -4,17 +4,18 @@
 
 #include "Node.h"
 
-Node::Node(int id, double x, double y, bool borderCondition) {
+Node::Node(int id, double x, double y,double t, bool borderCondition) {
     this -> x = x;
     this -> y = y;
     this -> id = id;
+    this -> t = t;
     this -> borderCondition = borderCondition;
 }
 
-double Node::getX() {
-    return 0;
-}
-
-double Node::getY() {
-    return 0;
-}
+//double Node::getX() {
+//    return 0;
+//}
+//
+//double Node::getY() {
+//    return 0;
+//}

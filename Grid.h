@@ -10,6 +10,7 @@
 #include "GlobalData.h"
 #include "Element.h"
 #include "Node.h"
+#include "UniversalElement.h"
 
 using namespace std;
 
@@ -22,12 +23,16 @@ public:
     vector<vector<double> > aggregationMatrixH;
     vector<vector<double> > aggregationMatrixC;
 
+
+
     double deltaX, deltaY;
 
     Grid ();
     bool checkBorderCondition(double x, double y);
     void printGrid();
     void aggregationHandC();
+    void egdeLength();
+
 };
 
 

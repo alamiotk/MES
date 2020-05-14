@@ -2,6 +2,7 @@
 // Created by ala on 06.05.20.
 //
 
+#include <cmath>
 #include "iostream"
 #include "Grid.h"
 #include "Node.h"
@@ -18,30 +19,25 @@ Grid::Grid() {
 
     int idOfNode = 0;
 
-    cout << numberOfHeight << " " << numberOfWidth << endl;
-
-
-//   Create nodes
+//*****************CREATES NODES**********************************
     for (int i = 0; i < numberOfWidth; i++) {
         for (int j = 0; j < numberOfHeight; j++, idOfNode++) {
 
             double x = i * deltaX;
             double y = j * deltaY;
+            double t = 0;
 
-            Node newNode = Node(idOfNode, x, y,  checkBorderCondition(x,y));
+            Node newNode = Node(idOfNode, x, y,t,checkBorderCondition(x,y));
             nodes.push_back(newNode);
-
-//            cout << newNode.x << " " << newNode.y << " " << newNode.borderCondition << " " << newNode.id << endl;
-
         }
     }
 
-//    Create elements
+//****************CREATE ELEMENTS***************************
+    int elementsInColumn = numberOfHeight - 1;
 
-    int elementCount = numberOfHeight - 1;
     for (int i = 0; i < numberOfElements; i++) {
-        int rowElements = i / elementCount * numberOfHeight;
-        int id = i % elementCount;
+        int rowElements = i / elementsInColumn * numberOfHeight;
+        int id = i % elementsInColumn;
 
         int a = rowElements + id;
         int b = rowElements + id + numberOfHeight;
@@ -66,24 +62,13 @@ bool Grid::checkBorderCondition(double x, double y) {
     return (
         x == 0 ||
         y == 0 ||
-        x == numberOfHeight - 1 ||
-        y == numberOfWidth -1
+        x == width ||
+        y == height
     );
 }
 
-void Grid::printGrid () {
 
-    for(int i = 0; i < numberOfNodes; i ++) {
-        cout << i << nodes[i].x << " " << nodes[i].y << " " << nodes[i].borderCondition << " " << nodes[i].id << endl;
-    }
-
-//    cout << "ELEMENTS" << endl;
-//
-//
-//    for (int i = 0; i < numberOfElements; i++) {
-//        cout << i << " " << elements[i].printCoordinates() << endl;
-//    }
-}
+//*****************AGGREGATION H AND C********************************
 
 void Grid::aggregationHandC() {
     int aggregationMatrixSize =  numberOfHeight * numberOfWidth;
@@ -91,44 +76,90 @@ void Grid::aggregationHandC() {
     aggregationMatrixH.resize(aggregationMatrixSize, std::vector<double>(aggregationMatrixSize, 0));
     aggregationMatrixC.resize(aggregationMatrixSize, std::vector<double>(aggregationMatrixSize, 0));
 
-
     UniversalElement universalElement = UniversalElement();
-
-//    universalElement.createMatrixHandC(elements[9]);
-//    universalElement.print();
+   // egdeLength(universalElement);
 
     for (int i = 0; i < numberOfElements; i++) {
         universalElement.createMatrixHandC(elements[i]);
 
-        cout << "ID: " << i << endl;
-        universalElement.print();
 
         for (int j = 0; j < numberOfNodesInElement; j++){
             for (int k = 0; k < numberOfNodesInElement; k++) {
                 int jId = elements[i].nodes[j]->id;
                 int kId = elements[i].nodes[k]->id;
-                aggregationMatrixH[jId][kId] += universalElement.H[i][j];
-                aggregationMatrixC[jId][kId] += universalElement.C[i][j];
+                aggregationMatrixH[jId][kId] += universalElement.H[j][k];
+                aggregationMatrixC[jId][kId] += universalElement.C[j][k];
             }
         }
     }
 
 
-    cout << "macierz H agragcja:" << endl;
+//********************Print Aggregation H and C*****************
+
+    cout << "AGGREGATION: H GLOBAL" << endl;
     for (int i = 0; i < aggregationMatrixSize; i++) {
         for (int j = 0; j < aggregationMatrixSize; j++) {
             cout << aggregationMatrixH[i][j] << " ";
         }
         cout << endl;
     }
-//
-    cout << "macierz C agragcja:" << endl;
+    cout << endl;
+
+    cout << "AGGREGATION: C GLOBAL" << endl;
     for (int i = 0; i < aggregationMatrixSize; i++) {
         for (int j = 0; j < aggregationMatrixSize; j++) {
             cout << aggregationMatrixC[i][j] << " ";
         }
         cout << endl;
     }
+    cout << endl;
 
 
 }
+
+void Grid::egdeLength() {
+    double N1X,N1Y,N2X,N2Y;//,N3,N4;
+
+//    N1X = elements[0].nodes[0]->x;
+//    N1Y = elements[0].nodes[0]->y;
+//
+//    N2X = elements[6].nodes[1]->x;
+//    N2Y = elements[6].nodes[1]->y;
+
+    N1X = 0;
+    N1Y = 0;
+
+    N2X = 0.025;
+    N2Y = 0;
+
+    UniversalElement universalElement = UniversalElement();
+//
+//    N3X = elements[8].nodes[2]->x;
+//    N4X = elements[2].nodes[3]->x;
+
+    double detJ = sqrt(pow((N1X-N2X),2)+pow((N1Y-N2Y),2))/2;
+
+    cout << detJ;
+    universalElement.vectorP(detJ);
+}
+
+
+
+
+//******************PRINTS***********************************
+
+void Grid::printGrid () {
+
+    for(int i = 0; i < numberOfNodes; i ++) {
+        cout << " ID: " << nodes[i].id << " X: " << nodes[i].x << " Y: " << nodes[i].y << " t: " << nodes[i].t << " BC: " << nodes[i].borderCondition  << endl << endl;
+    }
+
+    cout << "ELEMENTS" << endl;
+
+
+    for (int i = 0; i < numberOfElements; i++) {
+        cout << "ID: " << i << ": " << elements[i].printCoordinates() << endl;
+    }
+    cout << endl;
+}
+
