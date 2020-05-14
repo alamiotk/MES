@@ -22,16 +22,20 @@ public:
 
     vector<vector<double> > aggregationMatrixH;
     vector<vector<double> > aggregationMatrixC;
+    vector<vector<double> > aggregationMatrixHBC;
 
 
 
     double deltaX, deltaY;
+    double detJ;
 
     Grid ();
     bool checkBorderCondition(double x, double y);
     void printGrid();
     void aggregationHandC();
-    void egdeLength();
+    double edgeLength(Node *nodes1, Node *nodes2);
+
+    bool checkIfEdge(Element elements);
 
 };
 

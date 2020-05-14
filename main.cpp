@@ -12,10 +12,11 @@ int main() {
 
 
     uelem.createMatrixHandC(grid.elements[0]);
-    uelem.print();
 
     grid.aggregationHandC();
-    grid.egdeLength();
+    uelem.print();
+
+    //grid.egdeLength();
 
     //uelem.vectorP();
 

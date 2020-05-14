@@ -16,6 +16,7 @@ Grid::Grid() {
 
     this -> deltaX = width / (numberOfWidth - 1);
     this -> deltaY = height / (numberOfHeight - 1);
+    this -> detJ = 0;
 
     int idOfNode = 0;
 
@@ -68,35 +69,62 @@ bool Grid::checkBorderCondition(double x, double y) {
 }
 
 
-//*****************AGGREGATION H AND C********************************
+
+
+//*****************AGGREGATION H, C AND HBC********************************
 
 void Grid::aggregationHandC() {
     int aggregationMatrixSize =  numberOfHeight * numberOfWidth;
 
     aggregationMatrixH.resize(aggregationMatrixSize, std::vector<double>(aggregationMatrixSize, 0));
     aggregationMatrixC.resize(aggregationMatrixSize, std::vector<double>(aggregationMatrixSize, 0));
+    aggregationMatrixHBC.resize(aggregationMatrixSize, std::vector<double>(aggregationMatrixSize, 0));
 
     UniversalElement universalElement = UniversalElement();
-   // egdeLength(universalElement);
 
     for (int i = 0; i < numberOfElements; i++) {
+      //  cout << endl << "ID: " << i << endl;
+
+        if (this -> checkIfEdge(elements[i])){
+            universalElement.matrixHBC(detJ);
+        }
+        else {
+            universalElement.matrixHBC(0);
+        }
+
         universalElement.createMatrixHandC(elements[i]);
+
 
 
         for (int j = 0; j < numberOfNodesInElement; j++){
             for (int k = 0; k < numberOfNodesInElement; k++) {
                 int jId = elements[i].nodes[j]->id;
                 int kId = elements[i].nodes[k]->id;
-                aggregationMatrixH[jId][kId] += universalElement.H[j][k];
+                aggregationMatrixH[jId][kId] += universalElement.H[j][k] + universalElement.HBC[j][k];
                 aggregationMatrixC[jId][kId] += universalElement.C[j][k];
+                aggregationMatrixHBC[jId][kId] += universalElement.HBC[j][k];
             }
         }
     }
 
 
-//********************Print Aggregation H and C*****************
 
-    cout << "AGGREGATION: H GLOBAL" << endl;
+    for (int i = 0; i < aggregationMatrixSize; i++) {
+        for (int j = 0; j < aggregationMatrixSize; j++) {
+            aggregationMatrixH[i][j] += aggregationMatrixC[i][j]/50;
+           // cout << aggregationMatrixH[i][j] << " ";
+        }
+      //  cout << endl;
+    }
+  //  cout << endl;
+
+
+
+
+
+//********************Print Aggregation H, C AND HBC*****************
+
+    cout << "AGGREGATION: GLOBAL H + HBC + C/DT" << endl;
     for (int i = 0; i < aggregationMatrixSize; i++) {
         for (int j = 0; j < aggregationMatrixSize; j++) {
             cout << aggregationMatrixH[i][j] << " ";
@@ -114,33 +142,52 @@ void Grid::aggregationHandC() {
     }
     cout << endl;
 
-
+    cout << "AGGREGATION: HBC GLOBAL" << endl;
+    for (int i = 0; i < aggregationMatrixSize; i++) {
+        for (int j = 0; j < aggregationMatrixSize; j++) {
+            cout << aggregationMatrixHBC[i][j] << " ";
+        }
+        cout << endl;
+    }
+    cout << endl;
 }
 
-void Grid::egdeLength() {
-    double N1X,N1Y,N2X,N2Y;//,N3,N4;
 
-//    N1X = elements[0].nodes[0]->x;
-//    N1Y = elements[0].nodes[0]->y;
+bool Grid::checkIfEdge(Element elements){
+    if (elements.nodes[0]->borderCondition == 1 &&
+        elements.nodes[numberOfNodesInElement-1]->borderCondition == 1) {
+        edgeLength(elements.nodes[0], elements.nodes[numberOfNodesInElement - 1]);
+    return 1;
+    }
+    for (int i = 1; i < numberOfNodesInElement; i++) {
+        if (elements.nodes[i-1]->borderCondition == 1 &&
+            elements.nodes[i]->borderCondition == 1) {
+            edgeLength(elements.nodes[i-1], elements.nodes[i]);
+            return 1;
+        }
+    }
+    return 0;
+}
+
+
+double Grid::edgeLength(Node *nodes1, Node *nodes2) {
+//    double N1X,N1Y,N2X,N2Y;//,N3,N4;
 //
-//    N2X = elements[6].nodes[1]->x;
-//    N2Y = elements[6].nodes[1]->y;
-
-    N1X = 0;
-    N1Y = 0;
-
-    N2X = 0.025;
-    N2Y = 0;
-
-    UniversalElement universalElement = UniversalElement();
+//    N1X = 0;
+//    N1Y = 0;
 //
-//    N3X = elements[8].nodes[2]->x;
-//    N4X = elements[2].nodes[3]->x;
+//    N2X = 0.025;
+//    N2Y = 0;
 
-    double detJ = sqrt(pow((N1X-N2X),2)+pow((N1Y-N2Y),2))/2;
+    double N1X = nodes1 -> x;
+    double N1Y = nodes1 -> y;
 
-    cout << detJ;
-    universalElement.vectorP(detJ);
+    double N2X = nodes2 -> x;
+    double N2Y = nodes2 -> y;
+
+
+    detJ = sqrt(pow((N1X-N2X),2)+pow((N1Y-N2Y),2))/2;
+    return detJ;
 }
 
 

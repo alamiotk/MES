@@ -8,6 +8,7 @@
 #include "Element.h"
 #include "GlobalData.h"
 
+
 class UniversalElement {
 public:
     GlobalData globalData;
@@ -22,7 +23,7 @@ public:
     double det;
     double H[4][4] = {};
     double C[4][4] = {};
-    double HB[4][4] = {};
+    double HBC[4][4] = {};
     double functionsN[4][4];
     double derivativeDNDKsi[4][4];
     double derivativeDNDEta[4][4];
@@ -44,7 +45,9 @@ public:
     void print();
 
 
-    void vectorP(double detJ);
+
+    void matrixHBC(double detJ);
+    void vectorP();
 
 };
 
