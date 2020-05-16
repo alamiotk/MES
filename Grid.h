@@ -23,6 +23,7 @@ public:
     vector<vector<double> > aggregationMatrixH;
     vector<vector<double> > aggregationMatrixC;
     vector<vector<double> > aggregationMatrixHBC;
+    vector<double> aggregationVectoP;
 
 
 
@@ -33,9 +34,9 @@ public:
     bool checkBorderCondition(double x, double y);
     void printGrid();
     void aggregationHandC();
-    double edgeLength(Node *nodes1, Node *nodes2);
+    double edgeLength(Element elements, Node *nodes1, Node *nodes2);
 
-    bool checkIfEdge(Element elements);
+    void checkIfEdge(Element elements, UniversalElement universalElement, double vectorPLocalResult[],double matrixHBLocalResult[][4]);
 
 };
 

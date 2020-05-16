@@ -26,7 +26,7 @@ Grid::Grid() {
 
             double x = i * deltaX;
             double y = j * deltaY;
-            double t = 0;
+            double t = 100;
 
             Node newNode = Node(idOfNode, x, y,t,checkBorderCondition(x,y));
             nodes.push_back(newNode);
@@ -71,7 +71,7 @@ bool Grid::checkBorderCondition(double x, double y) {
 
 
 
-//*****************AGGREGATION H, C AND HBC********************************
+//*****************AGGREGATION H, C, HBC AND VECTOR P, MAIN FUNCTION********************************
 
 void Grid::aggregationHandC() {
     int aggregationMatrixSize =  numberOfHeight * numberOfWidth;
@@ -79,52 +79,81 @@ void Grid::aggregationHandC() {
     aggregationMatrixH.resize(aggregationMatrixSize, std::vector<double>(aggregationMatrixSize, 0));
     aggregationMatrixC.resize(aggregationMatrixSize, std::vector<double>(aggregationMatrixSize, 0));
     aggregationMatrixHBC.resize(aggregationMatrixSize, std::vector<double>(aggregationMatrixSize, 0));
+    aggregationVectoP.resize(aggregationMatrixSize, 0);
 
     UniversalElement universalElement = UniversalElement();
 
     for (int i = 0; i < numberOfElements; i++) {
-      //  cout << endl << "ID: " << i << endl;
+        cout << endl << "ID: " << i << endl;
 
-        if (this -> checkIfEdge(elements[i])){
-            universalElement.matrixHBC(detJ);
+        for (int g = 0; g < 4; g++){
+            for ( int  j = 0; j < 4; j++) {
+                universalElement.HBC[g][j] = 0;
+                universalElement.vecP[g] = 0;
+            }
         }
-        else {
-            universalElement.matrixHBC(0);
+
+
+        double vectorPLocalResult[4] = {};
+        double matrixHBLocalResult[4][4] = {};
+        this -> checkIfEdge(elements[i], universalElement, vectorPLocalResult, matrixHBLocalResult);
+
+//        cout << "WEKTOR lokalny obliczony: ID:" << i << "; ";
+//        for (int f = 0; f < 4; f++) {
+//            cout  << vectorPLocalResult[f] << " ";
+//        }
+
+        for (int i = 0; i < 4; i++){
+            for ( int  j = 0; j < 4; j++) {
+                cout << matrixHBLocalResult[i][j] << " ";
+            }
+            cout << endl;
         }
 
         universalElement.createMatrixHandC(elements[i]);
-
 
 
         for (int j = 0; j < numberOfNodesInElement; j++){
             for (int k = 0; k < numberOfNodesInElement; k++) {
                 int jId = elements[i].nodes[j]->id;
                 int kId = elements[i].nodes[k]->id;
-                aggregationMatrixH[jId][kId] += universalElement.H[j][k] + universalElement.HBC[j][k];
+                aggregationMatrixH[jId][kId] += universalElement.H[j][k] + matrixHBLocalResult[j][k];
                 aggregationMatrixC[jId][kId] += universalElement.C[j][k];
-                aggregationMatrixHBC[jId][kId] += universalElement.HBC[j][k];
+                aggregationMatrixHBC[jId][kId] += matrixHBLocalResult[j][k];
+           //     aggregationVectoP[jId] += vectorPLocalResult[j];
+                //cout << aggregationVectoP[jId] << endl;
             }
+        }
+        for ( int i = 0; i < aggregationMatrixSize; i++){
+            aggregationVectoP[i] += vectorPLocalResult[i];
         }
     }
 
+
+
+
+
+    cout << endl << "AGGREGATION: VECTOR P" << endl;
+    for (int i = 0; i < aggregationMatrixSize; i++) {
+        cout << aggregationVectoP[i] << " ";
+    }
+    cout << endl;
 
 
     for (int i = 0; i < aggregationMatrixSize; i++) {
         for (int j = 0; j < aggregationMatrixSize; j++) {
             aggregationMatrixH[i][j] += aggregationMatrixC[i][j]/50;
+            aggregationVectoP[i] += (aggregationMatrixC[i][j]/50) * 100;
            // cout << aggregationMatrixH[i][j] << " ";
         }
       //  cout << endl;
     }
-  //  cout << endl;
+    cout << endl;
 
 
+//********************Prints Aggregation H, C AND HBC*****************
 
-
-
-//********************Print Aggregation H, C AND HBC*****************
-
-    cout << "AGGREGATION: GLOBAL H + HBC + C/DT" << endl;
+    cout << "AGGREGATION: GLOBAL H + HBC + C / DT" << endl;
     for (int i = 0; i < aggregationMatrixSize; i++) {
         for (int j = 0; j < aggregationMatrixSize; j++) {
             cout << aggregationMatrixH[i][j] << " ";
@@ -150,46 +179,52 @@ void Grid::aggregationHandC() {
         cout << endl;
     }
     cout << endl;
+
+    cout << "AGGREGATION: VECTOR P + C / DT" << endl;
+    for (int i = 0; i < aggregationMatrixSize; i++) {
+        cout << aggregationVectoP[i] << " ";
+    }
+    cout << endl;
+
+
+
 }
-
-
-bool Grid::checkIfEdge(Element elements){
+void Grid::checkIfEdge(Element elements, UniversalElement universalElement, double vectorPLocalResult[], double matrixHBLocalResult[][4]){
     if (elements.nodes[0]->borderCondition == 1 &&
         elements.nodes[numberOfNodesInElement-1]->borderCondition == 1) {
-        edgeLength(elements.nodes[0], elements.nodes[numberOfNodesInElement - 1]);
-    return 1;
+        edgeLength(elements, elements.nodes[0], elements.nodes[numberOfNodesInElement - 1]);
+        universalElement.matrixHBC(elements, elements.nodes[0], elements.nodes[numberOfNodesInElement-1], detJ);
+        universalElement.vectorP(elements, elements.nodes[0], elements.nodes[numberOfNodesInElement-1], detJ);
     }
+
     for (int i = 1; i < numberOfNodesInElement; i++) {
         if (elements.nodes[i-1]->borderCondition == 1 &&
             elements.nodes[i]->borderCondition == 1) {
-            edgeLength(elements.nodes[i-1], elements.nodes[i]);
-            return 1;
+            edgeLength(elements, elements.nodes[i-1], elements.nodes[i]);
+            universalElement.matrixHBC(elements, elements.nodes[i-1], elements.nodes[i], detJ);
+            universalElement.vectorP(elements, elements.nodes[i-1], elements.nodes[i], detJ);
         }
     }
-    return 0;
+    for (int k = 0; k < 4; k++) {
+        for (int g = 0; g < 4; g++) {
+            vectorPLocalResult[g] = universalElement.vecP[g];
+            matrixHBLocalResult[k][g] = universalElement.HBC[k][g];
+        }
+    }
+
 }
 
 
-double Grid::edgeLength(Node *nodes1, Node *nodes2) {
-//    double N1X,N1Y,N2X,N2Y;//,N3,N4;
-//
-//    N1X = 0;
-//    N1Y = 0;
-//
-//    N2X = 0.025;
-//    N2Y = 0;
-
+double Grid::edgeLength(Element elements, Node *nodes1, Node *nodes2) {
     double N1X = nodes1 -> x;
     double N1Y = nodes1 -> y;
 
     double N2X = nodes2 -> x;
     double N2Y = nodes2 -> y;
 
-
     detJ = sqrt(pow((N1X-N2X),2)+pow((N1Y-N2Y),2))/2;
     return detJ;
 }
-
 
 
 

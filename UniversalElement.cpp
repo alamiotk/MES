@@ -155,31 +155,77 @@ void UniversalElement::createMatrixHandC(Element element) {
 
 //************************CREATE MATRIX HBC************************************8
 
-void UniversalElement::matrixHBC(double detJ){
-    for (int i = 0 ; i < 4; i++) {
-        for (int j=0; j< 4; j++ ) {
-            this -> HBC[i][j] = 0;
+void UniversalElement::matrixHBC(Element elements, Node *node1, Node *node2, double detJ){
+    if (detJ == 0) {
+        for (int i = 0; i < 4; i++){
+            for (int j = 0; j < 4; j++) {
+                HBC[i][j] = 0;
+            }
+        }
+    }
+    else {
+
+
+        if (elements.nodes[0]->id == node1->id && elements.nodes[3]->id == node2->id) {
+            for (int j = 0; j < 4; j++) {
+                for (int k = 0; k < 4; k++) {
+                    HBC[j][k] = ((functionNVectoP[6][j] * functionNVectoP[6][k]) +
+                                  (functionNVectoP[7][j] * functionNVectoP[7][k])
+                                 ) * detJ * 300;
+                }
+            }
+        }
+        else {
+            for (int m = 1; m < 4; m++) {
+                if (elements.nodes[m - 1]->id == node1->id &&
+                    elements.nodes[m]->id == node2->id) {
+                    for (int j = 0; j < 4; j++) {
+                        for (int k = 0; k < 4; k++) {
+                            HBC[j][k] += ((functionNVectoP[2*m-2][j] * functionNVectoP[2*m-2][k]) +
+                                          (functionNVectoP[2*m-1][j] * functionNVectoP[2*m-1][k])
+                                         ) * detJ * 300;
+                        }
+
+                    }
+
+                }
+            }
         }
     }
 
-    int k = 0;
-    for (int i = 0; i < 4; i++){
-        for (int j = 0; j < 4; j++){
-            HBC[i][j] = ((functionNVectoP[k][i] * functionNVectoP[k][j] * 300) +
-                          (functionNVectoP[k+1][i] * functionNVectoP[k+1][j] * 300)
-                         ) * detJ;
-            cout << HBC[i][j] << " ";
+}
+
+//************************VECTOR P**************************************************
+
+
+double *UniversalElement::vectorP(Element elements, Node *node1, Node *node2, double detJ){
+    if (detJ == 0) {
+        for (int i = 0; i < 4; i++){
+            vecP[i] = 0;
         }
-        k += 2;
-        cout << endl;
     }
-    cout << endl;
+    else {
+
+
+        if (elements.nodes[0]->id == node1->id && elements.nodes[3]->id == node2->id) {
+            for (int j = 0; j < 4; j++) {
+                vecP[j] += -(((functionNVectoP[6][j]) + (functionNVectoP[7][j])) * 1200 * 300 * detJ);
+            }
+        } else {
+            for (int m = 1; m < 4; m++) {
+                if (elements.nodes[m - 1]->id == node1->id &&
+                    elements.nodes[m]->id == node2->id) {
+                    for (int j = 0; j < 4; j++) {
+                        vecP[j] += -(((functionNVectoP[2*m-2][j]) + (functionNVectoP[(2*m-1)*2][j])) * 1200 * 300 * detJ);
+                    }
+
+                }
+            }
+        }
+    }
+
+    return vecP;
 }
-
-void UniversalElement::vectoP(){
-
-}
-
 
 
 
@@ -224,49 +270,49 @@ void UniversalElement::calculcateJacobiTransformation(Element element) {
 //*****************************PRINTS*********************************************8
 
 void UniversalElement::print() {
-    cout << "DERIVATIVE KSI" << endl;
-    for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 4; j++) {
-            cout << derivativeDNDKsi[i][j] << " ";
-        }
-        cout << endl;
-    }
-
-    cout << endl << "DERIVATIVES ETA" << endl;
-    for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 4; j++) {
-            cout << derivativeDNDEta[i][j] << " ";
-        }
-        cout << endl;
-    }
-
-    cout << endl << "SHAPE FUNCTIONS OF KSI AND ETA" << endl;
-    for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 4; j++) {
-            cout << functionsN[i][j] << " ";
-        }
-        cout << endl;
-    }
-
-    cout << endl << "JACOBI MATRIX" << endl;
-    for (int i = 0; i < 2; i++) {
-        for (int j = 0; j < 2; j++) {
-            cout << jacobiMatrix[i][j] << " ";
-        }
-        cout << endl;
-    }
-
-    cout << endl << "DET" << endl;
-
-    cout << det << endl;
-
-    cout << endl << "REVERSE JACOBI MATRIX" << endl;
-    for (int i = 0; i < 2; i++) {
-        for (int j = 0; j < 2; j++) {
-            cout << jacobiReverseMatrix[i][j] << " ";
-        }
-        cout << endl;
-    }
+//    cout << "DERIVATIVE KSI" << endl;
+//    for (int i = 0; i < 4; i++) {
+//        for (int j = 0; j < 4; j++) {
+//            cout << derivativeDNDKsi[i][j] << " ";
+//        }
+//        cout << endl;
+//    }
+//
+//    cout << endl << "DERIVATIVES ETA" << endl;
+//    for (int i = 0; i < 4; i++) {
+//        for (int j = 0; j < 4; j++) {
+//            cout << derivativeDNDEta[i][j] << " ";
+//        }
+//        cout << endl;
+//    }
+//
+//    cout << endl << "SHAPE FUNCTIONS OF KSI AND ETA" << endl;
+//    for (int i = 0; i < 4; i++) {
+//        for (int j = 0; j < 4; j++) {
+//            cout << functionsN[i][j] << " ";
+//        }
+//        cout << endl;
+//    }
+//
+//    cout << endl << "JACOBI MATRIX" << endl;
+//    for (int i = 0; i < 2; i++) {
+//        for (int j = 0; j < 2; j++) {
+//            cout << jacobiMatrix[i][j] << " ";
+//        }
+//        cout << endl;
+//    }
+//
+//    cout << endl << "DET" << endl;
+//
+//    cout << det << endl;
+//
+//    cout << endl << "REVERSE JACOBI MATRIX" << endl;
+//    for (int i = 0; i < 2; i++) {
+//        for (int j = 0; j < 2; j++) {
+//            cout << jacobiReverseMatrix[i][j] << " ";
+//        }
+//        cout << endl;
+//    }
 
     cout << endl << "MATRIX H LOCAL" << endl;
     for (int i = 0; i < 4; i++) {

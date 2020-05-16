@@ -6,15 +6,16 @@
 int main() {
 
     Grid grid;
-    grid.printGrid();
+   // grid.printGrid();
 
-    UniversalElement uelem;
+   // UniversalElement uelem;
 
 
-    uelem.createMatrixHandC(grid.elements[0]);
+ //   uelem.createMatrixHandC(grid.elements[0]);
+//    uelem.matrixHBC(0.001667);
 
     grid.aggregationHandC();
-    uelem.print();
+    //uelem.print();
 
     //grid.egdeLength();
 
