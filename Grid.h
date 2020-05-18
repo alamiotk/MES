@@ -22,9 +22,12 @@ public:
 
     vector<vector<double> > aggregationMatrixH;
     vector<vector<double> > aggregationMatrixC;
+    vector<double>  matrixCxT0;
     vector<vector<double> > aggregationMatrixHBC;
     vector<double> aggregationVectoP;
+    vector<double> temperatureInitialMatrix;
 
+    vector<double> temperatureT1;
 
 
     double deltaX, deltaY;
@@ -33,11 +36,14 @@ public:
     Grid ();
     bool checkBorderCondition(double x, double y);
     void printGrid();
-    void aggregationHandC();
+    void aggregation();
     double edgeLength(Element elements, Node *nodes1, Node *nodes2);
 
     void checkIfEdge(Element elements, UniversalElement universalElement, double vectorPLocalResult[],double matrixHBLocalResult[][4]);
 
+    double min(vector<double> temperatureT1, int aggregationMatrixSize, double minimalTemperature);
+    double max(vector<double> temperatureT1, int aggregationMatrixSize, double maximalTemperature);
+    vector<double> solveEquation(vector<vector<double> >aggregationMatrixH, vector<double> aggregationVectoP, int aggregationMatrixSize, vector<double> temperatureT1);
 };
 
 

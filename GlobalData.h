@@ -17,6 +17,9 @@ public:
     double heat;
     double density;
 
+    int initialTemperature, simulationTime, simulationStepTime;
+    int ambientTemperature, alfa;
+
     GlobalData();
     void print();
 

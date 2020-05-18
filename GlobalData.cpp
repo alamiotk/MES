@@ -13,6 +13,13 @@ using namespace std;
 GlobalData::GlobalData(){
     fstream plik;
     plik.open("mes.txt");
+    plik >> initialTemperature;
+    plik >> simulationTime;
+    plik >> simulationStepTime;
+    plik >> ambientTemperature;
+    plik >> alfa;
+
+
     plik >> height;
     plik >> width;
     plik >> numberOfHeight;
@@ -26,7 +33,8 @@ GlobalData::GlobalData(){
 }
 
 void GlobalData::print(){
-    cout << height << endl << width << endl << numberOfHeight << endl << numberOfWidth << endl;
+    cout << initialTemperature << endl << simulationTime << endl << simulationStepTime << endl << ambientTemperature << endl;
+    cout << alfa << endl << height << endl << width << endl << numberOfHeight << endl << numberOfWidth << endl;
     cout << numberOfNodesInElement << endl << conductivity << endl << heat << endl << density << endl;
 }
 

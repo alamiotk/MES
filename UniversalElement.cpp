@@ -157,8 +157,8 @@ void UniversalElement::createMatrixHandC(Element element) {
 
 void UniversalElement::matrixHBC(Element elements, Node *node1, Node *node2, double detJ){
     if (detJ == 0) {
-        for (int i = 0; i < 4; i++){
-            for (int j = 0; j < 4; j++) {
+        for (int i = 0; i < globalData.numberOfNodesInElement; i++){
+            for (int j = 0; j < globalData.numberOfNodesInElement; j++) {
                 HBC[i][j] = 0;
             }
         }
@@ -167,11 +167,11 @@ void UniversalElement::matrixHBC(Element elements, Node *node1, Node *node2, dou
 
 
         if (elements.nodes[0]->id == node1->id && elements.nodes[3]->id == node2->id) {
-            for (int j = 0; j < 4; j++) {
-                for (int k = 0; k < 4; k++) {
-                    HBC[j][k] = ((functionNVectoP[6][j] * functionNVectoP[6][k]) +
-                                  (functionNVectoP[7][j] * functionNVectoP[7][k])
-                                 ) * detJ * 300;
+            for (int j = 0; j < globalData.numberOfNodesInElement; j++) {
+                for (int k = 0; k < globalData.numberOfNodesInElement; k++) {
+                    HBC[j][k] = ((functionNVectoP[globalData.numberOfNodesInElement*2-2][j] * functionNVectoP[globalData.numberOfNodesInElement*2-2][k]) +
+                                  (functionNVectoP[globalData.numberOfNodesInElement*2-1][j] * functionNVectoP[globalData.numberOfNodesInElement*2-1][k])
+                                 ) * detJ * globalData.alfa;
                 }
             }
         }
@@ -179,11 +179,11 @@ void UniversalElement::matrixHBC(Element elements, Node *node1, Node *node2, dou
             for (int m = 1; m < 4; m++) {
                 if (elements.nodes[m - 1]->id == node1->id &&
                     elements.nodes[m]->id == node2->id) {
-                    for (int j = 0; j < 4; j++) {
-                        for (int k = 0; k < 4; k++) {
+                    for (int j = 0; j < globalData.numberOfNodesInElement; j++) {
+                        for (int k = 0; k < globalData.numberOfNodesInElement; k++) {
                             HBC[j][k] += ((functionNVectoP[2*m-2][j] * functionNVectoP[2*m-2][k]) +
                                           (functionNVectoP[2*m-1][j] * functionNVectoP[2*m-1][k])
-                                         ) * detJ * 300;
+                                         ) * detJ * globalData.alfa;
                         }
 
                     }
@@ -198,25 +198,26 @@ void UniversalElement::matrixHBC(Element elements, Node *node1, Node *node2, dou
 //************************VECTOR P**************************************************
 
 
-double *UniversalElement::vectorP(Element elements, Node *node1, Node *node2, double detJ){
+void UniversalElement::vectorP(Element elements, Node *node1, Node *node2, double detJ){
     if (detJ == 0) {
-        for (int i = 0; i < 4; i++){
+        for (int i = 0; i < globalData.numberOfNodesInElement; i++){
             vecP[i] = 0;
         }
     }
     else {
 
 
-        if (elements.nodes[0]->id == node1->id && elements.nodes[3]->id == node2->id) {
-            for (int j = 0; j < 4; j++) {
-                vecP[j] += -(((functionNVectoP[6][j]) + (functionNVectoP[7][j])) * 1200 * 300 * detJ);
+        if (elements.nodes[0]->id == node1->id && elements.nodes[globalData.numberOfNodesInElement-1]->id == node2->id) {
+            for (int j = 0; j < globalData.numberOfNodesInElement; j++) {
+                vecP[j] += (((functionNVectoP[globalData.numberOfNodesInElement*2-2][j]) + (functionNVectoP[globalData.numberOfNodesInElement*2-1][j])) * globalData.ambientTemperature * globalData.alfa * detJ);
             }
-        } else {
+        }
+        else {
             for (int m = 1; m < 4; m++) {
                 if (elements.nodes[m - 1]->id == node1->id &&
                     elements.nodes[m]->id == node2->id) {
-                    for (int j = 0; j < 4; j++) {
-                        vecP[j] += -(((functionNVectoP[2*m-2][j]) + (functionNVectoP[(2*m-1)*2][j])) * 1200 * 300 * detJ);
+                    for (int j = 0; j < globalData.numberOfNodesInElement; j++) {
+                        vecP[j] += (((functionNVectoP[2*m-2][j]) + (functionNVectoP[2*m-1][j])) * globalData.ambientTemperature * globalData.alfa * detJ);
                     }
 
                 }
@@ -224,7 +225,6 @@ double *UniversalElement::vectorP(Element elements, Node *node1, Node *node2, do
         }
     }
 
-    return vecP;
 }
 
 

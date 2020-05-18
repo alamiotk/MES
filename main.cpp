@@ -14,7 +14,7 @@ int main() {
  //   uelem.createMatrixHandC(grid.elements[0]);
 //    uelem.matrixHBC(0.001667);
 
-    grid.aggregationHandC();
+    grid.aggregation();
     //uelem.print();
 
     //grid.egdeLength();

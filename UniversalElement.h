@@ -29,13 +29,9 @@ public:
     double derivativeDNDEta[4][4];
     double derivativeDNDX[4][4];
     double derivativeDNDY[4][4];
-
     double functionNVectoP[8][4] = {};
-
-//    vector<double> vecP;
     double vecP[4] = {};
 
-//    Element *element;
 
     UniversalElement();
     ~UniversalElement();
@@ -50,11 +46,7 @@ public:
 
 
     void matrixHBC(Element elements, Node *node1, Node *node2, double detJ);
-    double *vectorP(Element elements, Node *node1, Node *node2, double detJ);
-   // double edgeLength(Element elements, Node *nodes1, Node *nodes2);
-
-  //  bool checkIfEdge(Element elements);
-
+    void vectorP(Element elements, Node *node1, Node *node2, double detJ);
 
 };
 
