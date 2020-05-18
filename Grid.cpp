@@ -77,87 +77,111 @@ bool Grid::checkBorderCondition(double x, double y) {
 void Grid::aggregation() {
     int aggregationMatrixSize =  numberOfHeight * numberOfWidth;
 
+
+    matrixCxT0.resize(aggregationMatrixSize, 0);
+
+    temperatureInitialMatrix.resize(aggregationMatrixSize, initialTemperature);
+    temperatureT1.resize(aggregationMatrixSize, 0);
+
+    UniversalElement universalElement = UniversalElement();
     aggregationMatrixH.resize(aggregationMatrixSize, std::vector<double>(aggregationMatrixSize, 0));
     aggregationMatrixC.resize(aggregationMatrixSize, std::vector<double>(aggregationMatrixSize, 0));
     aggregationMatrixHBC.resize(aggregationMatrixSize, std::vector<double>(aggregationMatrixSize, 0));
-    matrixCxT0.resize(aggregationMatrixSize, 0);
     aggregationVectoP.resize(aggregationMatrixSize, 0);
-    temperatureInitialMatrix.resize(aggregationMatrixSize, initialTemperature);
-    temperatureT1.resize(aggregationMatrixSize, 0);
     double minimalTemperature = 0;
     double maximalTemperature = 0;
 
-    UniversalElement universalElement = UniversalElement();
 
 
 
-    for (int i = 0; i < numberOfElements; i++) {
+    for(int r = 0; r < (simulationTime / simulationStepTime); r++) {
 
-        // FILL MATRIX HBC AND VECP WITH ZEROS
-        for (int g = 0; g < numberOfNodesInElement; g++){
-            for ( int  j = 0; j < numberOfNodesInElement; j++) {
-                universalElement.HBC[g][j] = 0;
+        for (int q = 0; q < aggregationMatrixSize; q++) {
+            for (int y = 0; y < aggregationMatrixSize; y++) {
+               aggregationMatrixHBC[q][y] = 0;
+               aggregationMatrixH[q][y] = 0;
+               aggregationMatrixC[q][y] = 0;
+
             }
-            universalElement.vecP[g] = 0;
+            aggregationVectoP[q] = 0;
+            matrixCxT0[q] = 0;
         }
 
-        // CREATE LOCAL VEC AND MATRIX FOR THE RESULTS OF BORDER CONDITIONS
-        double vectorPLocalResult[4] = {};
-        double matrixHBLocalResult[4][4] = {};
-        this -> checkIfEdge(elements[i], universalElement, vectorPLocalResult, matrixHBLocalResult);
 
 
-        // CREATE MATRIXES H AND C
-        universalElement.createMatrixHandC(elements[i]);
+        for (int i = 0; i < numberOfElements; i++) {
 
-
-        // AGGREGATION OF H, HBC, C, VEC P
-        for (int j = 0; j < numberOfNodesInElement; j++){
-            int jId = elements[i].nodes[j]->id;
-            for (int k = 0; k < numberOfNodesInElement; k++) {
-
-                int kId = elements[i].nodes[k]->id;
-                aggregationMatrixH[jId][kId] += universalElement.H[j][k] + matrixHBLocalResult[j][k];
-                aggregationMatrixC[jId][kId] += universalElement.C[j][k];
-                aggregationMatrixHBC[jId][kId] += matrixHBLocalResult[j][k];
+            // FILL MATRIX HBC AND VEC P WITH ZEROS
+            for (int g = 0; g < numberOfNodesInElement; g++) {
+                for (int j = 0; j < numberOfNodesInElement; j++) {
+                    universalElement.HBC[g][j] = 0;
+                }
+                universalElement.vecP[g] = 0;
             }
-            aggregationVectoP[jId] += vectorPLocalResult[j];
+
+            // CREATE LOCAL VEC AND MATRIX FOR THE RESULTS OF BORDER CONDITIONS
+            double vectorPLocalResult[4] = {};
+            double matrixHBLocalResult[4][4] = {};
+            this->checkIfEdge(elements[i], universalElement, vectorPLocalResult, matrixHBLocalResult);
+
+
+            // CREATE MATRIXES H AND C
+            universalElement.createMatrixHandC(elements[i]);
+
+
+            // AGGREGATION OF H, HBC, C, VEC P
+            for (int j = 0; j < numberOfNodesInElement; j++) {
+                int jId = elements[i].nodes[j]->id;
+                for (int k = 0; k < numberOfNodesInElement; k++) {
+
+                    int kId = elements[i].nodes[k]->id;
+                    aggregationMatrixH[jId][kId] += universalElement.H[j][k] + matrixHBLocalResult[j][k];
+                    aggregationMatrixC[jId][kId] += universalElement.C[j][k];
+                    aggregationMatrixHBC[jId][kId] += matrixHBLocalResult[j][k];
+                }
+                aggregationVectoP[jId] += vectorPLocalResult[j];
+            }
+
         }
 
-    }
-
-    //************************H (with HBC) + (C/DT)*********************************
-    for (int i = 0; i < aggregationMatrixSize; i++) {
-        for (int j = 0; j < aggregationMatrixSize; j++) {
-            aggregationMatrixH[i][j] += aggregationMatrixC[i][j]/simulationStepTime;
+        //************************H (with HBC) + (C/DT)*********************************
+        for (int i = 0; i < aggregationMatrixSize; i++) {
+            for (int j = 0; j < aggregationMatrixSize; j++) {
+                aggregationMatrixH[i][j] += aggregationMatrixC[i][j] / simulationStepTime;
+            }
         }
-    }
 
 
-    //*************************MATRIX (C/DT) x T0***************************************
-    for (int i = 0; i < aggregationMatrixSize; i++) {
-        for (int j = 0; j < aggregationMatrixSize; j++) {
-            matrixCxT0[i] += (aggregationMatrixC[i][j]/simulationStepTime) * temperatureInitialMatrix[j];
+        //*************************MATRIX (C/DT) x T0***************************************
+        for (int i = 0; i < aggregationMatrixSize; i++) {
+            for (int j = 0; j < aggregationMatrixSize; j++) {
+                matrixCxT0[i] += (aggregationMatrixC[i][j] / simulationStepTime) * temperatureInitialMatrix[j];
+            }
         }
-    }
 
-    //***********************VEC P + (C/DT) x T0*****************************************
-    for ( int i = 0; i < aggregationMatrixSize; i++) {
-        aggregationVectoP[i] += matrixCxT0[i];
-    }
+        //***********************VEC P + (C/DT) x T0*****************************************
+        for (int i = 0; i < aggregationMatrixSize; i++) {
+            aggregationVectoP[i] += matrixCxT0[i];
+        }
+
+        cout << endl << "AGGREGATION: VECTOR P + (C / DT)*T0" << endl;
+        for (int i = 0; i < aggregationMatrixSize; i++) {
+            cout << aggregationVectoP[i] << " ";
+        }
+        cout << endl << endl;
 
 
-    //***********************SOLVING THE EQUATION**********************************************
-    this -> solveEquation(aggregationMatrixH, aggregationVectoP, aggregationMatrixSize, temperatureT1);
+        //***********************SOLVING THE EQUATION**********************************************
+        temperatureT1 = this->solveEquation(aggregationMatrixH, aggregationVectoP, aggregationMatrixSize);
 
-    for (int b = 0; b < aggregationMatrixSize; b++){
-        cout << temperatureT1[b] << " ";
-    }
-    cout << endl;
-    this -> min(temperatureT1, aggregationMatrixSize, minimalTemperature);
-    this -> max(temperatureT1, aggregationMatrixSize, maximalTemperature);
+        for (int b = 0; b < aggregationMatrixSize; b++) {
+            cout << temperatureT1[b] << " ";
+        }
+        cout << endl;
+        minimalTemperature = this->min(temperatureT1, aggregationMatrixSize);
+        maximalTemperature = this->max(temperatureT1, aggregationMatrixSize);
 
-    cout << maximalTemperature << " " << minimalTemperature << endl;
+        cout << maximalTemperature << " " << minimalTemperature << endl;
 
 //********************Prints Aggregation H, C AND HBC*****************
 
@@ -178,7 +202,7 @@ void Grid::aggregation() {
 //        cout << endl;
 //    }
 //    cout << endl;
-
+//
 //    cout << "AGGREGATION: HBC GLOBAL" << endl;
 //    for (int i = 0; i < aggregationMatrixSize; i++) {
 //        for (int j = 0; j < aggregationMatrixSize; j++) {
@@ -188,39 +212,40 @@ void Grid::aggregation() {
 //    }
 //    cout << endl;
 
-//    cout << "AGGREGATION: VECTOR P + (C / DT)*T0" << endl;
-//    for (int i = 0; i < aggregationMatrixSize; i++) {
-//        cout << aggregationVectoP[i] << " ";
-//    }
-//    cout << endl;
+
+        for (int o = 0; o < aggregationMatrixSize; o++) {
+            temperatureInitialMatrix[o] = temperatureT1[o];
+            temperatureT1[o] = 0;
+        }
+    }
+
+
 
 }
-double Grid::min(vector<double> temperatureT1, int aggregationMatrixSize, double minimalTemperature) {
-    double min = 10000;
+double Grid::min(vector<double> temperatureT1, int aggregationMatrixSize) {
+    double min = 1000000;
     for (int i = 0; i < aggregationMatrixSize; i++){
         if (temperatureT1[i] < min) {
             min = temperatureT1[i];
         }
     }
-    minimalTemperature = min;
-    return minimalTemperature;
+    return min;
 
 }
-double Grid::max(vector<double> temperatureT1, int aggregationMatrixSize,  double maximalTemperature) {
+double Grid::max(vector<double> temperatureT1, int aggregationMatrixSize) {
     double max = 0;
     for (int i = 0; i < aggregationMatrixSize; i++){
         if (temperatureT1[i] > max) {
             max = temperatureT1[i];
         }
     }
-    maximalTemperature = max;
-    return maximalTemperature;
+    return max;
 }
 
 
 
 //*************SOLUTION OF THE EQUATION SYSTEM BY THE GAUSS ELIMINATION METHOD***********************
-vector<double> Grid::solveEquation(vector<vector<double> > aggregationMatrixH, vector<double> aggregationVectoP, int aggregationMatrixSize, vector<double> temperatureT1) {
+vector<double> Grid::solveEquation(vector<vector<double> > aggregationMatrixH, vector<double> aggregationVectoP, int aggregationMatrixSize) {
     for (int p = 0; p < aggregationMatrixSize; p++){
         // FIND PIVOT ROW AND SWAP
         int max = p;
@@ -240,6 +265,7 @@ vector<double> Grid::solveEquation(vector<vector<double> > aggregationMatrixH, v
         aggregationVectoP[max] = t;
 
         if ( fabs(aggregationMatrixH[p][p]) <= EPS) {
+            cout << "error" << endl;
             break;
         }
 
@@ -264,10 +290,7 @@ vector<double> Grid::solveEquation(vector<vector<double> > aggregationMatrixH, v
         x[i] = (aggregationVectoP[i] - sum) / aggregationMatrixH[i][i];
     }
 
-    for (int i = 0; i < aggregationMatrixSize; i++){
-       temperatureT1[i] = x[i];
-    }
-    return temperatureT1;
+    return x;
 }
 
 

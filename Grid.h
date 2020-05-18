@@ -41,9 +41,9 @@ public:
 
     void checkIfEdge(Element elements, UniversalElement universalElement, double vectorPLocalResult[],double matrixHBLocalResult[][4]);
 
-    double min(vector<double> temperatureT1, int aggregationMatrixSize, double minimalTemperature);
-    double max(vector<double> temperatureT1, int aggregationMatrixSize, double maximalTemperature);
-    vector<double> solveEquation(vector<vector<double> >aggregationMatrixH, vector<double> aggregationVectoP, int aggregationMatrixSize, vector<double> temperatureT1);
+    double min(vector<double> temperatureT1, int aggregationMatrixSize);
+    double max(vector<double> temperatureT1, int aggregationMatrixSize);
+    vector<double> solveEquation(vector<vector<double> >aggregationMatrixH, vector<double> aggregationVectoP, int aggregationMatrixSize);
 };
 
 
