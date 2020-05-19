@@ -14,9 +14,22 @@ const double VALUE_PLUS = (1/(sqrt(3)));
 const double VALUE_MINUS = - VALUE_PLUS;
 
 
-//*******************INTEGRATION POINTS ON 2D IN UNIVERSAL ELEMENT***********************
-
+//------------------INTEGRATION POINTS ON 2D IN UNIVERSAL ELEMENT------------------------------
 UniversalElement::UniversalElement() {
+    this -> integrationPoints.resize(globalData.numberOfNodesInElement, vector<double>(2, 0));
+    this -> pointsEdges.resize(globalData.numberOfNodesInElement * 2, vector<double>(2, 0));
+    this -> functionNVectoP.resize(globalData.numberOfNodesInElement * 2, vector<double>(globalData.numberOfNodesInElement, 0));
+    this -> functionsN.resize(globalData.numberOfNodesInElement, vector<double>(globalData.numberOfNodesInElement, 0));
+    this -> dNdKsi.resize(globalData.numberOfNodesInElement, 0);
+    this -> dNdEta.resize(globalData.numberOfNodesInElement, 0);
+    this -> derivativeDNDKsi.resize(globalData.numberOfNodesInElement, vector<double>(globalData.numberOfNodesInElement, 0));
+    this -> derivativeDNDEta.resize(globalData.numberOfNodesInElement, vector<double>(globalData.numberOfNodesInElement, 0));
+    this -> N.resize(globalData.numberOfNodesInElement, 0);
+    this -> H.resize(globalData.numberOfNodesInElement, std::vector<double>(globalData.numberOfNodesInElement, 0));
+    this -> C.resize(globalData.numberOfNodesInElement, std::vector<double>(globalData.numberOfNodesInElement, 0));
+    this -> derivativeDNDX.resize(globalData.numberOfNodesInElement, std::vector<double>(globalData.numberOfNodesInElement, 0));
+    this -> derivativeDNDY.resize(globalData.numberOfNodesInElement, std::vector<double>(globalData.numberOfNodesInElement, 0));
+
     this -> integrationPoints[0][0] = VALUE_MINUS;
     this -> integrationPoints[0][1] = VALUE_MINUS;
     this -> integrationPoints[1][0] = VALUE_PLUS;
@@ -30,13 +43,47 @@ UniversalElement::UniversalElement() {
     this -> pointsOnTheEdges();
 }
 
-UniversalElement::~UniversalElement() {}
+
+//----------DERIVATIVES OF THE SHAPE FUNCTIONS AFTER KSI AND ETA, SHAPE FUNCTIONS N----------------
+void UniversalElement::calculateShapeFunctions() {
+    for (int i = 0; i < globalData.numberOfNodesInElement; i++) {
+        for (int j = 0; j < globalData.numberOfNodesInElement; j++) {
+            shapeFunctionsKsiEta(this -> integrationPoints[i][0], this -> integrationPoints[i][1]);
+            derivativeDNDKsi[i][j] = dNdKsi[j];
+            derivativeDNDEta[i][j] = dNdEta[j];
+
+            shapeFunctionsN(this -> integrationPoints[i][0], this -> integrationPoints[i][1]);
+            functionsN[i][j] = N[j];
+        }
+    }
+}
+
+void UniversalElement::shapeFunctionsKsiEta(double ksi, double eta) {
+    dNdKsi[0] = -(0.25 * (1 - eta));
+    dNdEta[0] = -(0.25 * (1 - ksi));
+
+    dNdKsi[1] = (0.25 * (1 - eta));
+    dNdEta[1] = -(0.25*(1 + ksi));
+
+    dNdKsi[2] = (0.25 * (1 + eta));
+    dNdEta[2] = (0.25 * (1 + ksi));
+
+    dNdKsi[3] = -(0.25 * (1 + eta));
+    dNdEta[3] = (0.25 * (1 - ksi));
+}
+
+void UniversalElement::shapeFunctionsN(double ksi, double eta) {
+    N[0] = 0.25 * (1 - ksi) * (1 - eta);
+    N[1] = 0.25 * (1 + ksi) * (1 - eta);
+    N[2] = 0.25 * (1 + ksi) * (1 + eta);
+    N[3] = 0.25 * (1 - ksi) * (1 + eta);
+}
 
 
-
-//************************POINTS ON THE EDGES***********************************
-
+//-----------------------------POINTS ON THE EDGES-----------------------------
 void UniversalElement::pointsOnTheEdges(){
+
+
     this -> pointsEdges[0][0] = VALUE_MINUS;
     this -> pointsEdges[0][1] = - 1;
     this -> pointsEdges[1][0] = VALUE_PLUS;
@@ -65,51 +112,55 @@ void UniversalElement::pointsOnTheEdges(){
 }
 
 
+//-----------------------------CREATE MATRIX HBC AND VECTOR P-------------------------------------------
+void UniversalElement::matrixHBCandVecP(Element elements, Node *node1, Node *node2, double detJ){
+    if (detJ == 0) {
+        for (int i = 0; i < globalData.numberOfNodesInElement; i++){
+            for (int j = 0; j < globalData.numberOfNodesInElement; j++) {
+                HBC[i][j] = 0;
+            }
+            vecP[i] = 0;
+        }
+    }
+    else {
+        if (elements.nodes[0]->id == node1->id && elements.nodes[globalData.numberOfNodesInElement-1]->id == node2->id) {
+            for (int j = 0; j < globalData.numberOfNodesInElement; j++) {
+                for (int k = 0; k < globalData.numberOfNodesInElement; k++) {
+                    HBC[j][k] = ((functionNVectoP[globalData.numberOfNodesInElement * 2 - 2][j] *
+                                  functionNVectoP[globalData.numberOfNodesInElement * 2 - 2][k]) +
+                                 (functionNVectoP[globalData.numberOfNodesInElement * 2 - 1][j] *
+                                  functionNVectoP[globalData.numberOfNodesInElement * 2 - 1][k])
+                                ) * detJ * globalData.alfa;
+                }
+                vecP[j] += (((functionNVectoP[globalData.numberOfNodesInElement * 2 - 2][j]) +
+                             (functionNVectoP[globalData.numberOfNodesInElement * 2 - 1][j])) *
+                            globalData.ambientTemperature * globalData.alfa * detJ);
+            }
+        }
+        else {
+            for (int m = 1; m < 4; m++) {
+                if (elements.nodes[m - 1]->id == node1->id &&
+                    elements.nodes[m]->id == node2->id) {
+                    for (int j = 0; j < globalData.numberOfNodesInElement; j++) {
+                        for (int k = 0; k < globalData.numberOfNodesInElement; k++) {
+                            HBC[j][k] += ((functionNVectoP[2 * m - 2][j] * functionNVectoP[2 * m - 2][k]) +
+                                          (functionNVectoP[2 * m - 1][j] * functionNVectoP[2 * m - 1][k])
+                                         ) * detJ * globalData.alfa;
+                        }
+                        vecP[j] += (((functionNVectoP[2 * m - 2][j]) + (functionNVectoP[2 * m - 1][j])) *
+                                    globalData.ambientTemperature * globalData.alfa * detJ);
 
-//************DERIVATIVES OF THE SHAPE FUNCTIONS AFTER KSI AND ETA, SHAPE FUNCTIONS N **********
+                    }
 
-void UniversalElement::calculateShapeFunctions() {
-    for (int i = 0; i < globalData.numberOfNodesInElement; i++) {
-        for (int j = 0; j < globalData.numberOfNodesInElement; j++) {
-            shapeFunctionsKsiEta(this -> integrationPoints[i][0], this -> integrationPoints[i][1]);
-            derivativeDNDKsi[i][j] = dNdKsi[j];
-            derivativeDNDEta[i][j] = dNdEta[j];
-
-            shapeFunctionsN(this -> integrationPoints[i][0], this -> integrationPoints[i][1]);
-            functionsN[i][j] = N[j];
+                }
+            }
         }
     }
 }
 
 
-void UniversalElement::shapeFunctionsKsiEta(double ksi, double eta) {
-    dNdKsi[0] = -(0.25 * (1 - eta));
-    dNdEta[0] = -(0.25 * (1 - ksi));
-
-    dNdKsi[1] = (0.25 * (1 - eta));
-    dNdEta[1] = -(0.25*(1 + ksi));
-
-    dNdKsi[2] = (0.25 * (1 + eta));
-    dNdEta[2] = (0.25 * (1 + ksi));
-
-    dNdKsi[3] = -(0.25 * (1 + eta));
-    dNdEta[3] = (0.25 * (1 - ksi));
-}
-
-void UniversalElement::shapeFunctionsN(double ksi, double eta) {
-    N[0] = 0.25 * (1 - ksi) * (1 - eta);
-    N[1] = 0.25 * (1 + ksi) * (1 - eta);
-    N[2] = 0.25 * (1 + ksi) * (1 + eta);
-    N[3] = 0.25 * (1 - ksi) * (1 + eta);
-}
-
-
-
-
-//*****************CREATE MATRIXES H AND C*******************
-
+//--------------------CREATE MATRIXES H AND C----------------------------
 void UniversalElement::createMatrixHandC(Element element) {
-
     this -> calculcateJacobiTransformation(element);
 
     for (int i = 0 ; i < 4; i++) {
@@ -121,7 +172,7 @@ void UniversalElement::createMatrixHandC(Element element) {
         }
     }
 
-    //********************DN/DX AND DN/DY**********************************
+//----------------------DN/DX AND DN/DY-------------------------------
     for (int i = 0; i < globalData.numberOfNodesInElement; i++) {
         for (int j = 0; j < globalData.numberOfNodesInElement; j++) {
             derivativeDNDX[i][j] =(
@@ -135,10 +186,10 @@ void UniversalElement::createMatrixHandC(Element element) {
         }
     }
 
-    //*******************CREATE MATRIXES H AND C*********************************
-    for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 4; j++){
-            for ( int m = 0; m < 4; m++){
+//-------------------CREATE MATRIXES H AND C-----------------------
+    for (int i = 0; i < globalData.numberOfNodesInElement; i++) {
+        for (int j = 0; j < globalData.numberOfNodesInElement; j++){
+            for ( int m = 0; m < globalData.numberOfNodesInElement; m++){
                 H[j][m] += ((derivativeDNDX[i][j] * derivativeDNDX[i][m] +
                         derivativeDNDY[i][j] * derivativeDNDY[i][m]) *
                         globalData.conductivity * det
@@ -153,84 +204,7 @@ void UniversalElement::createMatrixHandC(Element element) {
 }
 
 
-//************************CREATE MATRIX HBC************************************8
-
-void UniversalElement::matrixHBC(Element elements, Node *node1, Node *node2, double detJ){
-    if (detJ == 0) {
-        for (int i = 0; i < globalData.numberOfNodesInElement; i++){
-            for (int j = 0; j < globalData.numberOfNodesInElement; j++) {
-                HBC[i][j] = 0;
-            }
-        }
-    }
-    else {
-
-
-        if (elements.nodes[0]->id == node1->id && elements.nodes[3]->id == node2->id) {
-            for (int j = 0; j < globalData.numberOfNodesInElement; j++) {
-                for (int k = 0; k < globalData.numberOfNodesInElement; k++) {
-                    HBC[j][k] = ((functionNVectoP[globalData.numberOfNodesInElement*2-2][j] * functionNVectoP[globalData.numberOfNodesInElement*2-2][k]) +
-                                  (functionNVectoP[globalData.numberOfNodesInElement*2-1][j] * functionNVectoP[globalData.numberOfNodesInElement*2-1][k])
-                                 ) * detJ * globalData.alfa;
-                }
-            }
-        }
-        else {
-            for (int m = 1; m < 4; m++) {
-                if (elements.nodes[m - 1]->id == node1->id &&
-                    elements.nodes[m]->id == node2->id) {
-                    for (int j = 0; j < globalData.numberOfNodesInElement; j++) {
-                        for (int k = 0; k < globalData.numberOfNodesInElement; k++) {
-                            HBC[j][k] += ((functionNVectoP[2*m-2][j] * functionNVectoP[2*m-2][k]) +
-                                          (functionNVectoP[2*m-1][j] * functionNVectoP[2*m-1][k])
-                                         ) * detJ * globalData.alfa;
-                        }
-
-                    }
-
-                }
-            }
-        }
-    }
-
-}
-
-//************************VECTOR P**************************************************
-
-
-void UniversalElement::vectorP(Element elements, Node *node1, Node *node2, double detJ){
-    if (detJ == 0) {
-        for (int i = 0; i < globalData.numberOfNodesInElement; i++){
-            vecP[i] = 0;
-        }
-    }
-    else {
-
-
-        if (elements.nodes[0]->id == node1->id && elements.nodes[globalData.numberOfNodesInElement-1]->id == node2->id) {
-            for (int j = 0; j < globalData.numberOfNodesInElement; j++) {
-                vecP[j] += (((functionNVectoP[globalData.numberOfNodesInElement*2-2][j]) + (functionNVectoP[globalData.numberOfNodesInElement*2-1][j])) * globalData.ambientTemperature * globalData.alfa * detJ);
-            }
-        }
-        else {
-            for (int m = 1; m < 4; m++) {
-                if (elements.nodes[m - 1]->id == node1->id &&
-                    elements.nodes[m]->id == node2->id) {
-                    for (int j = 0; j < globalData.numberOfNodesInElement; j++) {
-                        vecP[j] += (((functionNVectoP[2*m-2][j]) + (functionNVectoP[2*m-1][j])) * globalData.ambientTemperature * globalData.alfa * detJ);
-                    }
-
-                }
-            }
-        }
-    }
-
-}
-
-
-
-//********************JACOBI TRANSFORMATION*********************************8
-
+//-----------------------JACOBI TRANSFORMATION----------------------------
 void UniversalElement::calculcateJacobiTransformation(Element element) {
     det = 0;
 
@@ -238,12 +212,10 @@ void UniversalElement::calculcateJacobiTransformation(Element element) {
         for (int j = 0; j < 2; j++) {
             jacobiMatrix[i][j] = 0;
             jacobiReverseMatrix[i][j] = 0;
-
         }
     }
 
-    //******************CREATE JACOBI MATRIX**********************************
-
+//--------------------------CREATE JACOBI MATRIX-------------------------------
     for ( int i = 0; i < globalData.numberOfNodesInElement; i++) {
         jacobiMatrix[0][0] += derivativeDNDKsi[0][i] * element.nodes[i]->x;             // d x / d ksi
         jacobiMatrix[0][1] += derivativeDNDKsi[0][i] * element.nodes[i]->y;             // d y / d ksi
@@ -251,70 +223,66 @@ void UniversalElement::calculcateJacobiTransformation(Element element) {
         jacobiMatrix[1][1] += derivativeDNDEta[0][i] * element.nodes[i]->y;             // d y / d eta
     }
 
-    //********************CREATE DET OF JACOBI MATRIX**********************************
+//----------------------CREATE DET OF JACOBI MATRIX--------------------------------
+    det = jacobiMatrix[0][0] * jacobiMatrix[1][1] - jacobiMatrix[0][1] * jacobiMatrix[1][0];
 
-    det = jacobiMatrix[0][0]*jacobiMatrix[1][1] - jacobiMatrix[0][1]*jacobiMatrix[1][0];
 
-
-    //**********************CREATE REVERSE JACOBI MATRIX***************************
-
+//----------------------CREATE REVERSE JACOBI MATRIX-------------------------------
     for (int i = 0; i < 2; i++){
         for (int j = 0; j < 2; j++){
-            jacobiReverseMatrix[i][j] = (1/det) * jacobiMatrix[i][j];
+            jacobiReverseMatrix[i][j] = (1 / det) * jacobiMatrix[i][j];
         }
     }
 }
 
 
 
-//*****************************PRINTS*********************************************8
+//---------------------------------PRINTS-------------------------------------------
+void UniversalElement::printLocal() {
+    cout << "DERIVATIVE KSI:" << endl;
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            cout << derivativeDNDKsi[i][j] << " ";
+        }
+        cout << endl;
+    }
 
-void UniversalElement::print() {
-//    cout << "DERIVATIVE KSI" << endl;
-//    for (int i = 0; i < 4; i++) {
-//        for (int j = 0; j < 4; j++) {
-//            cout << derivativeDNDKsi[i][j] << " ";
-//        }
-//        cout << endl;
-//    }
-//
-//    cout << endl << "DERIVATIVES ETA" << endl;
-//    for (int i = 0; i < 4; i++) {
-//        for (int j = 0; j < 4; j++) {
-//            cout << derivativeDNDEta[i][j] << " ";
-//        }
-//        cout << endl;
-//    }
-//
-//    cout << endl << "SHAPE FUNCTIONS OF KSI AND ETA" << endl;
-//    for (int i = 0; i < 4; i++) {
-//        for (int j = 0; j < 4; j++) {
-//            cout << functionsN[i][j] << " ";
-//        }
-//        cout << endl;
-//    }
-//
-//    cout << endl << "JACOBI MATRIX" << endl;
-//    for (int i = 0; i < 2; i++) {
-//        for (int j = 0; j < 2; j++) {
-//            cout << jacobiMatrix[i][j] << " ";
-//        }
-//        cout << endl;
-//    }
-//
-//    cout << endl << "DET" << endl;
-//
-//    cout << det << endl;
-//
-//    cout << endl << "REVERSE JACOBI MATRIX" << endl;
-//    for (int i = 0; i < 2; i++) {
-//        for (int j = 0; j < 2; j++) {
-//            cout << jacobiReverseMatrix[i][j] << " ";
-//        }
-//        cout << endl;
-//    }
+    cout << endl << "DERIVATIVES ETA:" << endl;
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            cout << derivativeDNDEta[i][j] << " ";
+        }
+        cout << endl;
+    }
 
-    cout << endl << "MATRIX H LOCAL" << endl;
+    cout << endl << "SHAPE FUNCTIONS OF KSI AND ETA:" << endl;
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            cout << functionsN[i][j] << " ";
+        }
+        cout << endl;
+    }
+
+    cout << endl << "JACOBI MATRIX:" << endl;
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 2; j++) {
+            cout << jacobiMatrix[i][j] << " ";
+        }
+        cout << endl;
+    }
+
+    cout << endl << "DET:" << endl;
+    cout << det << endl;
+
+    cout << endl << "REVERSE JACOBI MATRIX:" << endl;
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 2; j++) {
+            cout << jacobiReverseMatrix[i][j] << " ";
+        }
+        cout << endl;
+    }
+
+    cout << endl << "MATRIX H LOCAL:" << endl;
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {
             cout << H[i][j] << "  ";
@@ -322,33 +290,21 @@ void UniversalElement::print() {
         cout << endl;
     }
 
-    cout << endl << "MATRIX C LOCAL" << endl;
+    cout << endl << "MATRIX C LOCAL:" << endl;
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {
             cout << C[i][j] << "  ";
         }
         cout << endl;
     }
-
     cout << endl;
 
-    cout << endl << "MATRIX HBC LOCAL" << endl;
-    for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 4; j++) {
-            cout << HBC[i][j] << "  ";
-        }
-        cout << endl;
-    }
-
-    cout << endl;
-    cout << endl << "FUNCTIONVECTORP" << endl;
+    cout << endl << "FUNCTION N VECTOR P:" << endl;
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 4; j++) {
             cout << functionNVectoP[i][j] << "  ";
         }
         cout << endl;
     }
-
     cout << endl;
-
 }

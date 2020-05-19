@@ -11,14 +11,15 @@
 using namespace std;
 
 Element::Element(vector<Node *> nodes) {
-    this->nodes = nodes;
+    this -> nodes = nodes;
 }
 
-string Element::printCoordinates() {
-    string s;
-    for (int i =0; i < nodes.size(); i++) {
-        s += to_string(nodes[i]->id) + " ";
-    }
 
+//-----------PRINT NODES IN ELEMENT------------------
+string Element::printNodesInElement() {
+    string s;
+    for (int i = 0; i < nodes.size(); i++) {
+        s += to_string(nodes[i] -> id) + " ";
+    }
     return s;
 }

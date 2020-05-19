@@ -14,36 +14,35 @@
 
 using namespace std;
 
-
 class Grid: public GlobalData {
 public:
     vector<Element> elements;
     vector<Node> nodes;
 
+    double deltaX, deltaY;
+    double detJ;
+    unsigned int aggregationMatrixSize;
     vector<vector<double> > aggregationMatrixH;
     vector<vector<double> > aggregationMatrixC;
-    vector<double>  matrixCxT0;
-    vector<vector<double> > aggregationMatrixHBC;
     vector<double> aggregationVectoP;
     vector<double> temperatureInitialMatrix;
-
+    vector<double>  matrixCxT0;
     vector<double> temperatureT1;
 
 
-    double deltaX, deltaY;
-    double detJ;
-
     Grid ();
     bool checkBorderCondition(double x, double y);
-    void printGrid();
     void aggregation();
-    double edgeLength(Element elements, Node *nodes1, Node *nodes2);
-
     void checkIfEdge(Element elements, UniversalElement universalElement, double vectorPLocalResult[],double matrixHBLocalResult[][4]);
-
+    double edgeLength(Element elements, Node *nodes1, Node *nodes2);
     double min(vector<double> temperatureT1, int aggregationMatrixSize);
     double max(vector<double> temperatureT1, int aggregationMatrixSize);
     vector<double> solveEquation(vector<vector<double> >aggregationMatrixH, vector<double> aggregationVectoP, int aggregationMatrixSize);
+
+    void printGrid();
+    void aggregationPrint();
+    void printVectorP();
+    void printTemperatureT1(double minimalTemperature, double maximalTemperature);
 };
 
 

@@ -11,11 +11,3 @@ Node::Node(int id, double x, double y,double t, bool borderCondition) {
     this -> t = t;
     this -> borderCondition = borderCondition;
 }
-
-//double Node::getX() {
-//    return 0;
-//}
-//
-//double Node::getY() {
-//    return 0;
-//}

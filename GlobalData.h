@@ -8,22 +8,19 @@
 
 class GlobalData {
 public:
-    double width, height;
-    int numberOfWidth, numberOfHeight;
+    double widthGrid, heightGrid;
+    unsigned int numberOfNodesWidth, numberOfNodesHeight;
     int numberOfElements;
     int numberOfNodes;
-    int numberOfNodesInElement;
+    unsigned int numberOfNodesInElement;
     double conductivity;
     double heat;
     double density;
-
     int initialTemperature, simulationTime, simulationStepTime;
     int ambientTemperature, alfa;
 
     GlobalData();
     void print();
-
-
 };
 
 #endif //MES_PROJ_GLOBALDATA_H

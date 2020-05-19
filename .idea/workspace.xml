@@ -13,8 +13,17 @@
   <component name="ChangeListManager">
     <list default="true" id="240e519c-d244-417d-a66d-50d1c762b735" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Element.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Element.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Element.h" beforeDir="false" afterPath="$PROJECT_DIR$/Element.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GlobalData.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/GlobalData.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GlobalData.h" beforeDir="false" afterPath="$PROJECT_DIR$/GlobalData.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Grid.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Grid.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Grid.h" beforeDir="false" afterPath="$PROJECT_DIR$/Grid.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Node.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Node.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Node.h" beforeDir="false" afterPath="$PROJECT_DIR$/Node.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UniversalElement.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/UniversalElement.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UniversalElement.h" beforeDir="false" afterPath="$PROJECT_DIR$/UniversalElement.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -28,52 +37,52 @@
     <session id="1603464109">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="4" />
+          <entry key="project.closed" value="5" />
           <entry key="project.open.time.1" value="2" />
           <entry key="project.open.time.12" value="1" />
           <entry key="project.open.time.13" value="1" />
           <entry key="project.open.time.16" value="1" />
           <entry key="project.open.time.3" value="1" />
-          <entry key="project.open.time.7" value="1" />
-          <entry key="project.opened" value="7" />
+          <entry key="project.open.time.7" value="2" />
+          <entry key="project.opened" value="8" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="cpp" value="13" />
-          <entry key="h" value="14" />
+          <entry key="cpp" value="23" />
+          <entry key="h" value="28" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="ObjectiveC" value="27" />
+          <entry key="ObjectiveC" value="51" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="cpp" value="18074" />
-          <entry key="h" value="1814" />
-          <entry key="txt" value="44" />
+          <entry key="cpp" value="21944" />
+          <entry key="h" value="2146" />
+          <entry key="txt" value="47" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="CMakeLists.txt" value="31" />
-          <entry key="ObjectiveC" value="19888" />
-          <entry key="PLAIN_TEXT" value="13" />
+          <entry key="ObjectiveC" value="24090" />
+          <entry key="PLAIN_TEXT" value="16" />
         </counts>
       </usages-collector>
     </session>
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.59375">
+    <splitter split-orientation="horizontal" split-proportion="0.49888393">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file pinned="false" current-in-tab="true">
+          <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/Grid.cpp">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="495">
-                  <caret line="111" column="42" selection-start-line="111" selection-start-column="42" selection-end-line="111" selection-end-column="42" />
+                <state relative-caret-position="-2075">
+                  <caret line="155" column="42" selection-start-line="155" selection-start-column="42" selection-end-line="155" selection-end-column="42" />
                   <folding>
                     <element signature="e#38#54#0" expanded="true" />
                   </folding>
@@ -81,11 +90,11 @@
               </provider>
             </entry>
           </file>
-          <file pinned="false" current-in-tab="false">
+          <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/GlobalData.cpp">
               <provider selected="true" editor-type-id="text-editor">
-                <state>
-                  <caret column="2" lean-forward="true" selection-start-column="2" selection-end-column="2" />
+                <state relative-caret-position="180">
+                  <caret line="16" column="4" selection-start-line="16" selection-start-column="4" selection-end-line="16" selection-end-column="4" />
                 </state>
               </provider>
             </entry>
@@ -93,8 +102,8 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/UniversalElement.cpp">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="391">
-                  <caret line="211" column="27" lean-forward="true" selection-start-line="211" selection-start-column="27" selection-end-line="211" selection-end-column="27" />
+                <state relative-caret-position="-1850">
+                  <caret line="112" selection-start-line="112" selection-end-line="112" />
                   <folding>
                     <element signature="e#37#66#0" expanded="true" />
                   </folding>
@@ -106,11 +115,11 @@
       </split-first>
       <split-second>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file pinned="false" current-in-tab="true">
+          <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/Grid.h">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="411">
-                  <caret line="44" column="70" selection-start-line="44" selection-start-column="70" selection-end-line="44" selection-end-column="70" />
+                <state relative-caret-position="660">
+                  <caret line="44" column="80" selection-start-line="44" selection-start-column="28" selection-end-line="44" selection-end-column="80" />
                   <folding>
                     <element signature="e#87#104#0" expanded="true" />
                   </folding>
@@ -121,8 +130,8 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/UniversalElement.h">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="577">
-                  <caret line="48" column="9" selection-start-line="48" selection-start-column="9" selection-end-line="48" selection-end-column="9" />
+                <state relative-caret-position="489">
+                  <caret line="47" column="22" lean-forward="true" selection-start-line="47" selection-start-column="22" selection-end-line="47" selection-end-column="22" />
                   <folding>
                     <element signature="e#111#131#0" expanded="true" />
                   </folding>
@@ -134,16 +143,16 @@
             <entry file="file://$PROJECT_DIR$/GlobalData.h">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="210">
-                  <caret line="14" column="31" selection-start-line="14" selection-start-column="31" selection-end-line="14" selection-end-column="31" />
+                  <caret line="14" column="13" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
                 </state>
               </provider>
             </entry>
           </file>
-          <file pinned="false" current-in-tab="false">
+          <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/main.cpp">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="210">
-                  <caret line="14" column="15" selection-start-line="14" selection-start-column="15" selection-end-line="14" selection-end-column="15" />
+                <state relative-caret-position="150">
+                  <caret line="10" column="23" selection-start-line="10" selection-start-column="23" selection-end-line="10" selection-end-column="23" />
                   <folding>
                     <element signature="e#0#19#0" expanded="true" />
                   </folding>
@@ -160,6 +169,7 @@
       <find>nodes[i]</find>
       <find>checkIfEdge</find>
       <find>dupa</find>
+      <find>numberOfWidth</find>
     </findStrings>
     <replaceStrings>
       <replace>newNode</replace>
@@ -172,17 +182,17 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/CMakeLists.txt" />
-        <option value="$PROJECT_DIR$/Node.cpp" />
         <option value="$PROJECT_DIR$/Node.h" />
-        <option value="$PROJECT_DIR$/Element.cpp" />
+        <option value="$PROJECT_DIR$/Node.cpp" />
         <option value="$PROJECT_DIR$/Element.h" />
+        <option value="$PROJECT_DIR$/Element.cpp" />
         <option value="$PROJECT_DIR$/GlobalData.h" />
-        <option value="$PROJECT_DIR$/GlobalData.cpp" />
         <option value="$PROJECT_DIR$/UniversalElement.h" />
         <option value="$PROJECT_DIR$/UniversalElement.cpp" />
-        <option value="$PROJECT_DIR$/main.cpp" />
         <option value="$PROJECT_DIR$/Grid.h" />
+        <option value="$PROJECT_DIR$/main.cpp" />
         <option value="$PROJECT_DIR$/Grid.cpp" />
+        <option value="$PROJECT_DIR$/GlobalData.cpp" />
       </list>
     </option>
   </component>
@@ -270,7 +280,8 @@
       <workItem from="1589461136148" duration="23078000" />
       <workItem from="1589536453679" duration="1469000" />
       <workItem from="1589625912330" duration="27058000" />
-      <workItem from="1589711500983" duration="23377000" />
+      <workItem from="1589711500983" duration="24855000" />
+      <workItem from="1589889436135" duration="15025000" />
     </task>
     <task id="LOCAL-00001" summary="FINISH ALMOST">
       <created>1588803650931</created>
@@ -307,11 +318,18 @@
       <option name="project" value="LOCAL" />
       <updated>1589821403627</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="FINISH!!!">
+      <created>1589829266520</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1589829266520</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="136054000" />
+    <option name="totallyTimeSpent" value="152557000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1920" y="0" width="1920" height="1080" extended-state="6" />
@@ -319,16 +337,16 @@
     <layout>
       <window_info id="Structure" order="0" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="1" side_tool="true" />
-      <window_info content_ui="combo" id="Project" order="2" visible="true" weight="0.04375667" />
+      <window_info content_ui="combo" id="Project" order="2" visible="true" weight="0.078441836" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.30965006" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.28056768" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.0" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.0911983" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.2799576" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Messages" order="8" weight="0.3244963" />
+      <window_info anchor="bottom" id="Messages" order="8" weight="0.32343584" />
       <window_info anchor="bottom" id="Terminal" order="9" weight="0.32969433" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="11" show_stripe_button="false" />
@@ -339,22 +357,22 @@
       <window_info anchor="right" id="Database" order="3" />
     </layout>
     <layout-to-restore>
-      <window_info content_ui="combo" id="Project" order="0" weight="0.08384333" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info id="Structure" order="0" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="1" side_tool="true" />
+      <window_info active="true" content_ui="combo" id="Project" order="2" visible="true" weight="0.078441836" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.04162103" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.39978093" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.31813362" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.28056768" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Messages" order="8" weight="0.32968238" />
-      <window_info anchor="bottom" id="Terminal" order="9" weight="0.32972974" />
+      <window_info anchor="bottom" id="Messages" order="8" weight="0.32343584" />
+      <window_info anchor="bottom" id="Terminal" order="9" weight="0.32969433" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="11" show_stripe_button="false" />
-      <window_info anchor="bottom" id="CMake" order="12" />
+      <window_info anchor="bottom" id="CMake" order="12" weight="0.32969433" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -369,7 +387,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="FINISH ALMOST" />
-    <option name="LAST_COMMIT_MESSAGE" value="FINISH ALMOST" />
+    <MESSAGE value="FINISH!!!" />
+    <option name="LAST_COMMIT_MESSAGE" value="FINISH!!!" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
@@ -381,34 +400,34 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Node.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="20" column="3" lean-forward="true" selection-start-line="20" selection-start-column="3" selection-end-line="20" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Element.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="17" column="13" selection-start-line="17" selection-start-column="13" selection-end-line="17" selection-end-column="13" />
-          <folding>
-            <element signature="e#38#57#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="195">
+          <caret line="13" selection-start-line="13" selection-end-line="13" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Node.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="180">
-          <caret line="12" column="16" selection-start-line="12" selection-start-column="16" selection-end-line="12" selection-end-column="16" />
+          <caret line="12" column="25" selection-start-line="12" selection-start-column="25" selection-end-line="12" selection-end-column="25" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Element.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" selection-start-line="7" selection-end-line="7" />
+        <state relative-caret-position="285">
+          <caret line="19" column="30" selection-start-line="19" selection-start-column="30" selection-end-line="19" selection-end-column="30" />
           <folding>
             <element signature="e#38#55#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Element.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="24" column="1" lean-forward="true" selection-start-line="24" selection-start-column="1" selection-end-line="24" selection-end-column="1" />
+          <folding>
+            <element signature="e#38#57#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -416,24 +435,41 @@
     <entry file="file://$PROJECT_DIR$/GlobalData.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="210">
-          <caret line="14" column="31" selection-start-line="14" selection-start-column="31" selection-end-line="14" selection-end-column="31" />
+          <caret line="14" column="13" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/include/c++/7/bits/stl_vector.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="217">
+          <caret line="797" selection-start-line="797" selection-end-line="797" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/UniversalElement.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="577">
-          <caret line="48" column="9" selection-start-line="48" selection-start-column="9" selection-end-line="48" selection-end-column="9" />
+        <state relative-caret-position="489">
+          <caret line="47" column="22" lean-forward="true" selection-start-line="47" selection-start-column="22" selection-end-line="47" selection-end-column="22" />
           <folding>
             <element signature="e#111#131#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Grid.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="660">
+          <caret line="44" column="80" selection-start-line="44" selection-start-column="28" selection-end-line="44" selection-end-column="80" />
+          <folding>
+            <element signature="e#87#104#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/main.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="14" column="15" selection-start-line="14" selection-start-column="15" selection-end-line="14" selection-end-column="15" />
+        <state relative-caret-position="150">
+          <caret line="10" column="23" selection-start-line="10" selection-start-column="23" selection-end-line="10" selection-end-column="23" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
           </folding>
@@ -442,38 +478,28 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/UniversalElement.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="211" column="27" lean-forward="true" selection-start-line="211" selection-start-column="27" selection-end-line="211" selection-end-column="27" />
+        <state relative-caret-position="-1850">
+          <caret line="112" selection-start-line="112" selection-end-line="112" />
           <folding>
             <element signature="e#37#66#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/GlobalData.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="2" lean-forward="true" selection-start-column="2" selection-end-column="2" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Grid.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="411">
-          <caret line="44" column="70" selection-start-line="44" selection-start-column="70" selection-end-line="44" selection-end-column="70" />
-          <folding>
-            <element signature="e#87#104#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Grid.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="495">
-          <caret line="111" column="42" selection-start-line="111" selection-start-column="42" selection-end-line="111" selection-end-column="42" />
+        <state relative-caret-position="-2075">
+          <caret line="155" column="42" selection-start-line="155" selection-start-column="42" selection-end-line="155" selection-end-column="42" />
           <folding>
             <element signature="e#38#54#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/GlobalData.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="16" column="4" selection-start-line="16" selection-start-column="4" selection-end-line="16" selection-end-column="4" />
         </state>
       </provider>
     </entry>

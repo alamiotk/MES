@@ -7,46 +7,49 @@
 
 #include "Element.h"
 #include "GlobalData.h"
+#include <vector>
+
+using namespace std;
 
 
 class UniversalElement {
 public:
     GlobalData globalData;
 
-    double integrationPoints[4][2];
-    double pointsEdges[8][2];
-    double dNdKsi[4];
-    double dNdEta[4];
-    double N[4];
     double jacobiReverseMatrix[2][2];
     double jacobiMatrix[2][2];
     double det;
-    double H[4][4] = {};
-    double C[4][4] = {};
+
+    vector<vector<double> > integrationPoints;
+    vector<vector<double> > pointsEdges;
+    vector<double> dNdKsi;
+    vector<double> dNdEta;
+    vector<double> N;
+    vector<vector<double> > H;
+    vector<vector<double> > C;
+    vector<vector<double> > derivativeDNDX;
+    vector<vector<double> > derivativeDNDY;
+    vector<vector<double> > functionsN;
+    vector<vector<double> > functionNVectoP;
+    vector<vector<double> > derivativeDNDKsi;
+    vector<vector<double> > derivativeDNDEta;
+
     double HBC[4][4] = {};
-    double functionsN[4][4];
-    double derivativeDNDKsi[4][4];
-    double derivativeDNDEta[4][4];
-    double derivativeDNDX[4][4];
-    double derivativeDNDY[4][4];
-    double functionNVectoP[8][4] = {};
     double vecP[4] = {};
 
 
     UniversalElement();
-    ~UniversalElement();
     void calculateShapeFunctions();
     void shapeFunctionsN(double ksi, double eta);
     void shapeFunctionsKsiEta(double ksi, double eta);
     void calculcateJacobiTransformation(Element element);
     void createMatrixHandC(Element element);
     void pointsOnTheEdges();
-    void print();
+    void printLocal();
 
 
 
-    void matrixHBC(Element elements, Node *node1, Node *node2, double detJ);
-    void vectorP(Element elements, Node *node1, Node *node2, double detJ);
+    void matrixHBCandVecP(Element elements, Node *node1, Node *node2, double detJ);
 
 };
 

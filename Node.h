@@ -8,15 +8,11 @@
 
 class Node {
 public:
-//    x,y wynikiem
     int id;
     double x,y,t;
     bool borderCondition;
 
     Node(int id, double x, double y,double t, bool borderCondition);
-//    double getX();
-//    double getY();
-
 };
 
 

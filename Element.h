@@ -17,7 +17,7 @@ public:
     vector<Node *> nodes;
 
     Element(vector<Node *> nodes);
-    string printCoordinates();
+    string printNodesInElement();
 };
 
 
