@@ -4,6 +4,7 @@
 
 #include <cmath>
 #include <iomanip>
+#include <fstream>
 #include "iostream"
 #include "Grid.h"
 #include "Node.h"
@@ -25,9 +26,10 @@ Grid::Grid() {
     int idOfNode = 0;
     for (int i = 0; i < numberOfNodesWidth; i++) {
         for (int j = 0; j < numberOfNodesHeight; j++, idOfNode++) {
+
             double x = i * deltaX;
             double y = j * deltaY;
-            double t = 0;
+            double t = initialTemperature;
 
             Node newNode = Node(idOfNode, x, y,t,checkBorderCondition(x,y));
             nodes.push_back(newNode);
@@ -38,13 +40,14 @@ Grid::Grid() {
     int elementsInColumn = numberOfNodesHeight - 1;
 
     for (int i = 0; i < numberOfElements; i++) {
-        int rowElements = i / elementsInColumn * numberOfNodesHeight;
+        int columnElement = i / elementsInColumn * numberOfNodesHeight;
         int id = i % elementsInColumn;
 
-        int a = rowElements + id;
-        int b = rowElements + id + numberOfNodesHeight;
-        int c = rowElements + id + numberOfNodesHeight + 1;
-        int d = rowElements + id + 1;
+
+        int a = columnElement + id;
+        int b = columnElement + id + numberOfNodesHeight;
+        int c = columnElement + id + numberOfNodesHeight + 1;
+        int d = columnElement + id + 1;
 
         vector<Node *> tempNodes;
 
@@ -71,15 +74,30 @@ bool Grid::checkBorderCondition(double x, double y) {
 
 
 //----------------AGGREGATION H, C, HBC AND VECTOR P, SOLVE EQUATION-----------------
-void Grid::aggregation() {
+void Grid::calculate() {
     aggregationMatrixSize =  numberOfNodesHeight * numberOfNodesWidth;
-    aggregationMatrixH.resize(aggregationMatrixSize, std::vector<double>(aggregationMatrixSize, 0));
-    aggregationMatrixC.resize(aggregationMatrixSize, std::vector<double>(aggregationMatrixSize, 0));
-    aggregationVectoP.resize(aggregationMatrixSize, 0);
 
-    temperatureInitialMatrix.resize(aggregationMatrixSize, initialTemperature);
-    matrixCxT0.resize(aggregationMatrixSize, 0);
-    temperatureT1.resize(aggregationMatrixSize, 0);
+    aggregationMatrixH.resize(
+            aggregationMatrixSize,
+            vector<double>(aggregationMatrixSize, 0)
+    );
+    aggregationMatrixC.resize(
+            aggregationMatrixSize,
+            vector<double>(aggregationMatrixSize, 0)
+    );
+    aggregationVectoP.resize(
+            aggregationMatrixSize, 0
+    );
+
+    temperatureInitialMatrix.resize(
+            aggregationMatrixSize, initialTemperature
+    );
+    matrixCxT0.resize(
+            aggregationMatrixSize, 0
+    );
+    temperatureT1.resize(
+            aggregationMatrixSize, 0
+    );
 
 
     double minimalTemperature;
@@ -93,6 +111,7 @@ void Grid::aggregation() {
 //---------FILL ALL AGGREGATION MATRIXES WITH ZEROS---------
         for (int q = 0; q < aggregationMatrixSize; q++) {
             for (int y = 0; y < aggregationMatrixSize; y++) {
+
                aggregationMatrixH[q][y] = 0;
                aggregationMatrixC[q][y] = 0;
             }
@@ -111,6 +130,7 @@ void Grid::aggregation() {
             this -> checkIfEdge(elements[i], universalElement, vectorPLocalResult, matrixHBLocalResult);
 
 
+
 //--------------- CREATE LOCAL MATRIXES H AND C--------------------------
             universalElement.createMatrixHandC(elements[i]);
 
@@ -118,7 +138,9 @@ void Grid::aggregation() {
 //----------------AGGREGATION OF H, HBC, C, VEC P-----------------------------------
             for (int j = 0; j < numberOfNodesInElement; j++) {
                 int jId = elements[i].nodes[j]->id;
+
                 for (int k = 0; k < numberOfNodesInElement; k++) {
+
                     int kId = elements[i].nodes[k]->id;
                     aggregationMatrixH[jId][kId] += universalElement.H[j][k] + matrixHBLocalResult[j][k];
                     aggregationMatrixC[jId][kId] += universalElement.C[j][k];
@@ -132,6 +154,7 @@ void Grid::aggregation() {
 //------------------------VEC P + (C/DT) x T0---------------------------
         for (int i = 0; i < aggregationMatrixSize; i++) {
             for (int j = 0; j < aggregationMatrixSize; j++) {
+
                 aggregationMatrixH[i][j] += aggregationMatrixC[i][j] / simulationStepTime;
                 matrixCxT0[i] += (aggregationMatrixC[i][j] / simulationStepTime) *
                 temperatureInitialMatrix[j];
@@ -143,13 +166,15 @@ void Grid::aggregation() {
 
 
 //----------------------SOLVING THE EQUATION-------------------------------------
-        temperatureT1 = this -> solveEquation(aggregationMatrixH, aggregationVectoP, aggregationMatrixSize);
+        temperatureT1 = this -> solveEquation(aggregationMatrixSize);
 
         minimalTemperature = this -> min(temperatureT1, aggregationMatrixSize);
         maximalTemperature = this -> max(temperatureT1, aggregationMatrixSize);
 
         cout << "ITERACJA: " << r << endl;
         this -> printTemperatureT1(minimalTemperature, maximalTemperature);
+
+
 
 
         for (int i = 0; i < aggregationMatrixSize; i++){
@@ -170,26 +195,37 @@ void Grid::aggregation() {
 
 
 //---------------------CHECK BORDER CONDITIONS AND CALCULATE VEC P AND HBC----------------------------
-void Grid::checkIfEdge(Element elements, UniversalElement universalElement, double vectorPLocalResult[], double matrixHBLocalResult[][4]){
+void Grid::checkIfEdge(Element elements, UniversalElement universalElement,
+        double vectorPLocalResult[], double matrixHBLocalResult[][4]){
+
     if (elements.nodes[0]->borderCondition == 1 &&
         elements.nodes[numberOfNodesInElement-1]->borderCondition == 1) {
 
-        edgeLength(elements, elements.nodes[0], elements.nodes[numberOfNodesInElement - 1]);
-        universalElement.matrixHBCandVecP(elements, elements.nodes[0], elements.nodes[numberOfNodesInElement - 1], detJ);
+        edgeLength(elements.nodes[0], elements.nodes[numberOfNodesInElement - 1]);
+
+        universalElement.matrixHBCandVecP(elements, elements.nodes[0],
+                elements.nodes[numberOfNodesInElement - 1], detJ
+        );
     }
 
     for (int i = 1; i < numberOfNodesInElement; i++) {
+
         if (elements.nodes[i-1]->borderCondition == 1 &&
             elements.nodes[i]->borderCondition == 1) {
 
-            edgeLength(elements, elements.nodes[i-1], elements.nodes[i]);
-            universalElement.matrixHBCandVecP(elements, elements.nodes[i - 1], elements.nodes[i], detJ);
+            edgeLength(elements.nodes[i-1], elements.nodes[i]);
+
+            universalElement.matrixHBCandVecP(elements,
+                    elements.nodes[i - 1], elements.nodes[i], detJ
+            );
         }
     }
+
 
 //---------------------ASSIGNMENT-------------------
     for (int k = 0; k < numberOfNodesInElement; k++) {
         for (int g = 0; g < numberOfNodesInElement; g++) {
+
             vectorPLocalResult[g] = universalElement.vecP[g];
             matrixHBLocalResult[k][g] = universalElement.HBC[k][g];
         }
@@ -197,7 +233,7 @@ void Grid::checkIfEdge(Element elements, UniversalElement universalElement, doub
 }
 
 //------------------------CALCULATE DET J-------------------------------
-double Grid::edgeLength(Element elements, Node *nodes1, Node *nodes2) {
+double Grid::edgeLength(Node *nodes1, Node *nodes2) {
     double N1X = nodes1 -> x;
     double N1Y = nodes1 -> y;
 
@@ -212,14 +248,15 @@ double Grid::edgeLength(Element elements, Node *nodes1, Node *nodes2) {
 
 
 //----------------SOLVING THE EQUATION BY THE GAUSS ELIMINATION METHOD---------------------
-vector<double> Grid::solveEquation(vector<vector<double> > aggregationMatrixH, vector<double> aggregationVectoP, int aggregationMatrixSize) {
+vector<double> Grid::solveEquation(int aggregationMatrixSize) {
 
     for (int p = 0; p < aggregationMatrixSize; p++){
 
 //--------------FIND PIVOT ROW AND SWAP-------------------
         int max = p;
         for ( int i = p + 1; i < aggregationMatrixSize; i++) {
-            if (fabs(aggregationMatrixH[i][p]) > fabs(aggregationMatrixH[max][p])) {
+
+            if (abs(aggregationMatrixH[i][p]) > abs(aggregationMatrixH[max][p])) {
                 max = i;
             }
         }
@@ -241,6 +278,7 @@ vector<double> Grid::solveEquation(vector<vector<double> > aggregationMatrixH, v
         for ( int i = p + 1; i < aggregationMatrixSize; i++) {
             double alpha = aggregationMatrixH[i][p] / aggregationMatrixH[p][p];
             aggregationVectoP[i] -= alpha * aggregationVectoP[p];
+
             for ( int j = p; j < aggregationMatrixSize; j++){
                 aggregationMatrixH[i][j] -= alpha * aggregationMatrixH[p][j];
             }
@@ -253,6 +291,7 @@ vector<double> Grid::solveEquation(vector<vector<double> > aggregationMatrixH, v
 
     for(int i = aggregationMatrixSize - 1; i >= 0; i--) {
         double sum = 0.0;
+
         for (int j = i + 1; j < aggregationMatrixSize; j++){
             sum += aggregationMatrixH[i][j] * x[j];
         }
@@ -267,6 +306,7 @@ vector<double> Grid::solveEquation(vector<vector<double> > aggregationMatrixH, v
 double Grid::min(vector<double> temperatureT1, int aggregationMatrixSize) {
     double min = 1000000;
     for (int i = 0; i < aggregationMatrixSize; i++){
+
         if (temperatureT1[i] < min) {
             min = temperatureT1[i];
         }
@@ -277,6 +317,7 @@ double Grid::min(vector<double> temperatureT1, int aggregationMatrixSize) {
 double Grid::max(vector<double> temperatureT1, int aggregationMatrixSize) {
     double max = 0;
     for (int i = 0; i < aggregationMatrixSize; i++){
+
         if (temperatureT1[i] > max) {
             max = temperatureT1[i];
         }
@@ -337,5 +378,11 @@ void Grid::printTemperatureT1(double minimalTemperature, double maximalTemperatu
 //    }
 //    cout << endl;
 
-    cout << "MIN: " << minimalTemperature << endl << "MAX: " << maximalTemperature << endl << endl;
+    cout << "MIN: " << minimalTemperature << "  MAX: " << maximalTemperature << endl << endl;
+
+    fstream zapis;
+    zapis.open("wyniki.txt", ios::app);
+    zapis <<  minimalTemperature << " " << maximalTemperature << endl;
+    zapis.close();
+
 }

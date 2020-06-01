@@ -6,7 +6,7 @@
 int main() {
 
     Grid grid;
-    grid.printGrid();
+    //grid.printGrid();
 
-    //grid.aggregation();
+    grid.calculate();
 }

@@ -6,6 +6,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <string>
+#include <math.h>
 
 using namespace std;
 
@@ -14,8 +15,12 @@ GlobalData::GlobalData(){
 
 //-------------LOADING DATA-------------------------
     fstream plik;
+
     plik.open("mes1.txt");
     //plik.open("mes2.txt");
+    //plik.open("mes3.txt");
+
+
     plik >> initialTemperature;
     plik >> simulationTime;
     plik >> simulationStepTime;
@@ -36,8 +41,9 @@ GlobalData::GlobalData(){
 
 //-------------PRINT DATA--------------------------
 void GlobalData::print(){
-    cout << initialTemperature << endl << simulationTime << endl << simulationStepTime << endl << ambientTemperature << endl;
-    cout << alfa << endl << heightGrid << endl << widthGrid << endl << numberOfNodesHeight << endl << numberOfNodesWidth << endl;
-    cout << numberOfNodesInElement << endl << conductivity << endl << heat << endl << density << endl;
+    cout << initialTemperature << endl << simulationTime << endl << simulationStepTime << endl;
+    cout << ambientTemperature << endl << alfa << endl << heightGrid << endl << widthGrid << endl;
+    cout << numberOfNodesHeight << endl << numberOfNodesWidth << endl << numberOfNodesInElement << endl;
+    cout << conductivity << endl << heat << endl << density << endl;
 }
 

@@ -14,8 +14,8 @@ Element::Element(vector<Node *> nodes) {
     this -> nodes = nodes;
 }
 
-
 //-----------PRINT NODES IN ELEMENT------------------
+
 string Element::printNodesInElement() {
     string s;
     for (int i = 0; i < nodes.size(); i++) {

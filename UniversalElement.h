@@ -17,6 +17,8 @@ public:
     GlobalData globalData;
 
     double jacobiReverseMatrix[2][2];
+    double HBC[4][4] = {};
+    double vecP[4] = {};
     double jacobiMatrix[2][2];
     double det;
 
@@ -30,19 +32,18 @@ public:
     vector<vector<double> > derivativeDNDX;
     vector<vector<double> > derivativeDNDY;
     vector<vector<double> > functionsN;
-    vector<vector<double> > functionNVectoP;
+    vector<vector<double> > functionNEdges;
     vector<vector<double> > derivativeDNDKsi;
     vector<vector<double> > derivativeDNDEta;
 
-    double HBC[4][4] = {};
-    double vecP[4] = {};
+
 
 
     UniversalElement();
     void calculateShapeFunctions();
     void shapeFunctionsN(double ksi, double eta);
     void shapeFunctionsKsiEta(double ksi, double eta);
-    void calculcateJacobiTransformation(Element element);
+    void calculcateJacobiTransformation(Element element, int p);
     void createMatrixHandC(Element element);
     void pointsOnTheEdges();
     void printLocal();

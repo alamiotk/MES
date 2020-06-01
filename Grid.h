@@ -30,14 +30,20 @@ public:
     vector<double> temperatureT1;
 
 
+
+
     Grid ();
     bool checkBorderCondition(double x, double y);
-    void aggregation();
-    void checkIfEdge(Element elements, UniversalElement universalElement, double vectorPLocalResult[],double matrixHBLocalResult[][4]);
-    double edgeLength(Element elements, Node *nodes1, Node *nodes2);
+    void calculate();
+    double edgeLength(Node *nodes1, Node *nodes2);
     double min(vector<double> temperatureT1, int aggregationMatrixSize);
     double max(vector<double> temperatureT1, int aggregationMatrixSize);
-    vector<double> solveEquation(vector<vector<double> >aggregationMatrixH, vector<double> aggregationVectoP, int aggregationMatrixSize);
+
+    void checkIfEdge(Element elements, UniversalElement universalElement,
+            double vectorPLocalResult[],double matrixHBLocalResult[][4]
+            );
+
+    vector<double> solveEquation(int aggregationMatrixSize);
 
     void printGrid();
     void aggregationPrint();

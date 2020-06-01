@@ -13,22 +13,55 @@ using namespace std;
 const double VALUE_PLUS = (1/(sqrt(3)));
 const double VALUE_MINUS = - VALUE_PLUS;
 
-
 //------------------INTEGRATION POINTS ON 2D IN UNIVERSAL ELEMENT------------------------------
 UniversalElement::UniversalElement() {
-    this -> integrationPoints.resize(globalData.numberOfNodesInElement, vector<double>(2, 0));
-    this -> pointsEdges.resize(globalData.numberOfNodesInElement * 2, vector<double>(2, 0));
-    this -> functionNVectoP.resize(globalData.numberOfNodesInElement * 2, vector<double>(globalData.numberOfNodesInElement, 0));
-    this -> functionsN.resize(globalData.numberOfNodesInElement, vector<double>(globalData.numberOfNodesInElement, 0));
-    this -> dNdKsi.resize(globalData.numberOfNodesInElement, 0);
-    this -> dNdEta.resize(globalData.numberOfNodesInElement, 0);
-    this -> derivativeDNDKsi.resize(globalData.numberOfNodesInElement, vector<double>(globalData.numberOfNodesInElement, 0));
-    this -> derivativeDNDEta.resize(globalData.numberOfNodesInElement, vector<double>(globalData.numberOfNodesInElement, 0));
-    this -> N.resize(globalData.numberOfNodesInElement, 0);
-    this -> H.resize(globalData.numberOfNodesInElement, std::vector<double>(globalData.numberOfNodesInElement, 0));
-    this -> C.resize(globalData.numberOfNodesInElement, std::vector<double>(globalData.numberOfNodesInElement, 0));
-    this -> derivativeDNDX.resize(globalData.numberOfNodesInElement, std::vector<double>(globalData.numberOfNodesInElement, 0));
-    this -> derivativeDNDY.resize(globalData.numberOfNodesInElement, std::vector<double>(globalData.numberOfNodesInElement, 0));
+    this -> dNdKsi.resize(
+        globalData.numberOfNodesInElement, 0
+    );
+    this -> dNdEta.resize(
+        globalData.numberOfNodesInElement, 0
+    );
+    this -> N.resize(
+        globalData.numberOfNodesInElement, 0
+    );
+    this -> integrationPoints.resize(
+        globalData.numberOfNodesInElement, vector<double>(2, 0)
+    );
+    this -> pointsEdges.resize(
+        globalData.numberOfNodesInElement * 2, vector<double>(2, 0)
+    );
+    this -> functionNEdges.resize(
+        globalData.numberOfNodesInElement * 2,
+        vector<double>(globalData.numberOfNodesInElement, 0)
+    );
+    this -> functionsN.resize(
+        globalData.numberOfNodesInElement,
+        vector<double>(globalData.numberOfNodesInElement, 0)
+    );
+    this -> derivativeDNDKsi.resize(
+        globalData.numberOfNodesInElement,
+        vector<double>(globalData.numberOfNodesInElement, 0)
+    );
+    this -> derivativeDNDEta.resize(
+        globalData.numberOfNodesInElement,
+        vector<double>(globalData.numberOfNodesInElement, 0)
+    );
+    this -> H.resize(
+        globalData.numberOfNodesInElement,
+        vector<double>(globalData.numberOfNodesInElement, 0)
+    );
+    this -> C.resize(
+        globalData.numberOfNodesInElement,
+        std::vector<double>(globalData.numberOfNodesInElement, 0)
+    );
+    this -> derivativeDNDX.resize(
+        globalData.numberOfNodesInElement,
+        vector<double>(globalData.numberOfNodesInElement, 0)
+    );
+    this -> derivativeDNDY.resize(
+        globalData.numberOfNodesInElement,
+        vector<double>(globalData.numberOfNodesInElement, 0)
+    );
 
     this -> integrationPoints[0][0] = VALUE_MINUS;
     this -> integrationPoints[0][1] = VALUE_MINUS;
@@ -83,7 +116,6 @@ void UniversalElement::shapeFunctionsN(double ksi, double eta) {
 //-----------------------------POINTS ON THE EDGES-----------------------------
 void UniversalElement::pointsOnTheEdges(){
 
-
     this -> pointsEdges[0][0] = VALUE_MINUS;
     this -> pointsEdges[0][1] = - 1;
     this -> pointsEdges[1][0] = VALUE_PLUS;
@@ -105,7 +137,7 @@ void UniversalElement::pointsOnTheEdges(){
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 4; j++) {
             shapeFunctionsN(this->pointsEdges[i][0], this->pointsEdges[i][1]);
-            functionNVectoP[i][j] = N[j];
+            functionNEdges[i][j] = N[j];
         }
         m++;
     }
@@ -114,54 +146,50 @@ void UniversalElement::pointsOnTheEdges(){
 
 //-----------------------------CREATE MATRIX HBC AND VECTOR P-------------------------------------------
 void UniversalElement::matrixHBCandVecP(Element elements, Node *node1, Node *node2, double detJ){
-    if (detJ == 0) {
-        for (int i = 0; i < globalData.numberOfNodesInElement; i++){
-            for (int j = 0; j < globalData.numberOfNodesInElement; j++) {
-                HBC[i][j] = 0;
+
+    if (elements.nodes[0] -> id == node1 -> id &&
+        elements.nodes[globalData.numberOfNodesInElement-1] -> id == node2 -> id) {
+
+        for (int j = 0; j < globalData.numberOfNodesInElement; j++) {
+            for (int k = 0; k < globalData.numberOfNodesInElement; k++) {
+
+                HBC[j][k] = ((functionNEdges[globalData.numberOfNodesInElement * 2 - 2][j] *
+                              functionNEdges[globalData.numberOfNodesInElement * 2 - 2][k]) +
+                             (functionNEdges[globalData.numberOfNodesInElement * 2 - 1][j] *
+                              functionNEdges[globalData.numberOfNodesInElement * 2 - 1][k])
+                            ) * detJ * globalData.alfa;
             }
-            vecP[i] = 0;
+            vecP[j] = (((functionNEdges[globalData.numberOfNodesInElement * 2 - 2][j]) +
+                         (functionNEdges[globalData.numberOfNodesInElement * 2 - 1][j])) *
+                        globalData.ambientTemperature * globalData.alfa * detJ);
         }
     }
     else {
-        if (elements.nodes[0]->id == node1->id && elements.nodes[globalData.numberOfNodesInElement-1]->id == node2->id) {
-            for (int j = 0; j < globalData.numberOfNodesInElement; j++) {
-                for (int k = 0; k < globalData.numberOfNodesInElement; k++) {
-                    HBC[j][k] = ((functionNVectoP[globalData.numberOfNodesInElement * 2 - 2][j] *
-                                  functionNVectoP[globalData.numberOfNodesInElement * 2 - 2][k]) +
-                                 (functionNVectoP[globalData.numberOfNodesInElement * 2 - 1][j] *
-                                  functionNVectoP[globalData.numberOfNodesInElement * 2 - 1][k])
-                                ) * detJ * globalData.alfa;
-                }
-                vecP[j] += (((functionNVectoP[globalData.numberOfNodesInElement * 2 - 2][j]) +
-                             (functionNVectoP[globalData.numberOfNodesInElement * 2 - 1][j])) *
-                            globalData.ambientTemperature * globalData.alfa * detJ);
-            }
-        }
-        else {
-            for (int m = 1; m < 4; m++) {
-                if (elements.nodes[m - 1]->id == node1->id &&
-                    elements.nodes[m]->id == node2->id) {
-                    for (int j = 0; j < globalData.numberOfNodesInElement; j++) {
-                        for (int k = 0; k < globalData.numberOfNodesInElement; k++) {
-                            HBC[j][k] += ((functionNVectoP[2 * m - 2][j] * functionNVectoP[2 * m - 2][k]) +
-                                          (functionNVectoP[2 * m - 1][j] * functionNVectoP[2 * m - 1][k])
-                                         ) * detJ * globalData.alfa;
-                        }
-                        vecP[j] += (((functionNVectoP[2 * m - 2][j]) + (functionNVectoP[2 * m - 1][j])) *
-                                    globalData.ambientTemperature * globalData.alfa * detJ);
+        for (int m = 1; m < globalData.numberOfNodesInElement; m++) {
+            if (elements.nodes[m - 1] -> id == node1 -> id &&
+                elements.nodes[m] -> id == node2 -> id) {
 
+                for (int j = 0; j < globalData.numberOfNodesInElement; j++) {
+                    for (int k = 0; k < globalData.numberOfNodesInElement; k++) {
+
+                        HBC[j][k] += (((functionNEdges[2 * m - 2][j] * functionNEdges[2 * m - 2][k]) +
+                                      (functionNEdges[2 * m - 1][j] * functionNEdges[2 * m - 1][k])
+                                     ) * detJ * globalData.alfa
+                                     );
                     }
-
+                    vecP[j] += (((functionNEdges[2 * m - 2][j]) + (functionNEdges[2 * m - 1][j])) *
+                                globalData.ambientTemperature * globalData.alfa * detJ
+                                );
                 }
+
             }
         }
     }
-}
 
+}
 
 //--------------------CREATE MATRIXES H AND C----------------------------
 void UniversalElement::createMatrixHandC(Element element) {
-    this -> calculcateJacobiTransformation(element);
 
     for (int i = 0 ; i < 4; i++) {
         for (int j=0; j< 4; j++ ){
@@ -172,40 +200,42 @@ void UniversalElement::createMatrixHandC(Element element) {
         }
     }
 
+   for (int i = 0; i < globalData.numberOfNodesInElement; i++) {
+
+       this -> calculcateJacobiTransformation(element, i);
+
 //----------------------DN/DX AND DN/DY-------------------------------
-    for (int i = 0; i < globalData.numberOfNodesInElement; i++) {
-        for (int j = 0; j < globalData.numberOfNodesInElement; j++) {
-            derivativeDNDX[i][j] =(
-                jacobiReverseMatrix[0][0] * derivativeDNDKsi[i][j] +
-                jacobiReverseMatrix[0][1] * derivativeDNDEta[i][j]
-            );
-            derivativeDNDY[i][j] = (
-                jacobiReverseMatrix[1][0] * derivativeDNDKsi[i][j] +
-                jacobiReverseMatrix[1][1] * derivativeDNDEta[i][j]
-            );
-        }
-    }
+       for (int j = 0; j < globalData.numberOfNodesInElement; j++) {
 
+           derivativeDNDX[i][j] = (
+                   jacobiReverseMatrix[0][0] * derivativeDNDKsi[i][j] +
+                   jacobiReverseMatrix[0][1] * derivativeDNDEta[i][j]
+           );
+           derivativeDNDY[i][j] = (
+                   jacobiReverseMatrix[1][0] * derivativeDNDKsi[i][j] +
+                   jacobiReverseMatrix[1][1] * derivativeDNDEta[i][j]
+           );
+       }
 //-------------------CREATE MATRIXES H AND C-----------------------
-    for (int i = 0; i < globalData.numberOfNodesInElement; i++) {
-        for (int j = 0; j < globalData.numberOfNodesInElement; j++){
-            for ( int m = 0; m < globalData.numberOfNodesInElement; m++){
-                H[j][m] += ((derivativeDNDX[i][j] * derivativeDNDX[i][m] +
-                        derivativeDNDY[i][j] * derivativeDNDY[i][m]) *
-                        globalData.conductivity * det
-                );
-                C[j][m] += ((functionsN[i][j] * functionsN[i][m]) *
-                        globalData.heat * globalData.density * det
-                );
+       for (int j = 0; j < globalData.numberOfNodesInElement; j++) {
+           for (int m = 0; m < globalData.numberOfNodesInElement; m++) {
 
-            }
-        }
-    }
+               H[j][m] += ((derivativeDNDX[i][j] * derivativeDNDX[i][m] +
+                            derivativeDNDY[i][j] * derivativeDNDY[i][m]) *
+                           globalData.conductivity * det
+               );
+               C[j][m] += ((functionsN[i][j] * functionsN[i][m]) *
+                           globalData.heat * globalData.density * det
+               );
+
+           }
+       }
+
+   }
 }
 
-
 //-----------------------JACOBI TRANSFORMATION----------------------------
-void UniversalElement::calculcateJacobiTransformation(Element element) {
+void UniversalElement::calculcateJacobiTransformation(Element element, int p) {
     det = 0;
 
     for (int i = 0; i < 2; i++){
@@ -214,13 +244,13 @@ void UniversalElement::calculcateJacobiTransformation(Element element) {
             jacobiReverseMatrix[i][j] = 0;
         }
     }
-
 //--------------------------CREATE JACOBI MATRIX-------------------------------
-    for ( int i = 0; i < globalData.numberOfNodesInElement; i++) {
-        jacobiMatrix[0][0] += derivativeDNDKsi[0][i] * element.nodes[i]->x;             // d x / d ksi
-        jacobiMatrix[0][1] += derivativeDNDKsi[0][i] * element.nodes[i]->y;             // d y / d ksi
-        jacobiMatrix[1][0] += derivativeDNDEta[0][i] * element.nodes[i]->x;             // d x / d eta
-        jacobiMatrix[1][1] += derivativeDNDEta[0][i] * element.nodes[i]->y;             // d y / d eta
+    for (int i = 0; i < globalData.numberOfNodesInElement; i++) {
+
+        jacobiMatrix[0][0] += derivativeDNDKsi[p][i] * element.nodes[i]->x;
+        jacobiMatrix[0][1] += derivativeDNDKsi[p][i] * element.nodes[i]->y;
+        jacobiMatrix[1][0] += derivativeDNDEta[p][i] * element.nodes[i]->x;
+        jacobiMatrix[1][1] += derivativeDNDEta[p][i] * element.nodes[i]->y;
     }
 
 //----------------------CREATE DET OF JACOBI MATRIX--------------------------------
@@ -302,7 +332,7 @@ void UniversalElement::printLocal() {
     cout << endl << "FUNCTION N VECTOR P:" << endl;
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 4; j++) {
-            cout << functionNVectoP[i][j] << "  ";
+            cout << functionNEdges[i][j] << "  ";
         }
         cout << endl;
     }
