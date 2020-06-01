@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/ala/Desktop/MES/Mes_Proj/GlobalData.cpp
+GlobalData.h
+/home/ala/Desktop/MES/Mes_Proj/GlobalData.h
+fstream
+-
+iostream
+-
+cstdlib
+-
+string
+-
+math.h
+-
+
+/home/ala/Desktop/MES/Mes_Proj/GlobalData.h
+
