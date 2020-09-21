@@ -9,6 +9,7 @@ The individual points have been described on the basis of Gauss-Legendre quadrat
 
 To implement the FEM 2D thermal problem there has beed used convection boundary condition.
 
+-----------------------------------------------------------------------------------
 
 ABOUT THE CODE:
 
@@ -19,7 +20,6 @@ I do all the aggregations and calculate the solution to the matrix equation here
 
 The "UniversalElement" is the class in which I perform all calculations related to integration matrixes H, C, HBC and vector P.
 
-
-
+-----------------------------------------------------------------------------------
 
 I have attached a pdf with the entire report.
